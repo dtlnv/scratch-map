@@ -12,20 +12,22 @@ const Map: React.FC<MapInterface> = ({ name }) => {
     import(`../../assets/svg-maps/${name}.svg`).then((module) => {
       setSvgComponent(() => module.default);
     });
-  }, []);
+  }, [name]);
 
   useEffect(() => {
-    const svgElement = document.querySelector('.map-container svg > g');
-    const rect = svgElement?.getBoundingClientRect();
-    console.log('rect', rect);
-
-    if (rect) {
-      // setViewBox(`0 0 ${rect?.width + 169} ${rect?.height + 316}`);
-      setViewBox(`0 0 ${rect?.width} ${rect?.height * 1.5}`);
+    const svgElement: HTMLDivElement | null = document.querySelector('.map-container svg');
+    if (svgElement) {
+      const width: string | null = svgElement?.getAttribute('width');
+      const height: string | null = svgElement?.getAttribute('height');
+      if (width && height) {
+        setViewBox(`0 0 ${width} ${height}`);
+        svgElement.removeAttribute('width');
+        svgElement.removeAttribute('height');
+      }
     }
   }, [SvgComponent]);
 
-  return SvgComponent && <SvgComponent viewBox={viewBox} width='791.97px' height='1030.2px' preserveAspectRatio='xMidYMid meet' />;
+  return SvgComponent && <SvgComponent viewBox={viewBox} preserveAspectRatio='xMidYMid meet' />;
 };
 
 export default Map;

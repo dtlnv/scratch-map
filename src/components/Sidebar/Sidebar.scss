@@ -4,9 +4,9 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   gap: 24px;
+  user-select: none;
   .block {
     background-color: $white;
     box-shadow: $defaultBoxShadow;

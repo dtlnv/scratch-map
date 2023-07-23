@@ -5,11 +5,13 @@ import Sidebar from '../Sidebar/Sidebar';
 import Tabs from '../Tabs/Tabs';
 
 const Main: React.FC = () => {
+  const [currentMap, setCurrentMap] = useState<string>('world');
+
   return (
     <div className='layout'>
       <div className='left'>
-        <Tabs activeMap='urkaine' />
-        <MapContainer name='ukraine' />
+        <Tabs activeMap={currentMap} setCurrentMap={setCurrentMap} />
+        <MapContainer name={currentMap} />
       </div>
       <div className='right'>
         <Sidebar />

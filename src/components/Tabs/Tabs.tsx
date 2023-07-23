@@ -8,20 +8,33 @@ const tabsListDefault = [
     name: 'World',
   },
   {
-    map: 'urkaine',
-    name: 'Urkaine',
+    map: 'ukraine',
+    name: 'Ukraine',
   },
   {
     map: 'europe',
     name: 'Europe',
   },
+  {
+    map: 'poland',
+    name: 'Poland',
+  },
+  {
+    map: 'canada',
+    name: 'Canada',
+  },
+  {
+    map: 'usa',
+    name: 'USA',
+  },
 ];
 
 interface TabsInterface {
   activeMap: string;
+  setCurrentMap: (arg: string) => void;
 }
 
-const Tabs: React.FC<TabsInterface> = ({ activeMap }) => {
+const Tabs: React.FC<TabsInterface> = ({ activeMap, setCurrentMap }) => {
   const [tabsList, setTabsList] = useState<{ name: string; map: string }[]>([]);
   useEffect(() => {
     setTabsList(tabsListDefault);
@@ -30,7 +43,7 @@ const Tabs: React.FC<TabsInterface> = ({ activeMap }) => {
   return (
     <div className='tabs'>
       {tabsList.map((item) => (
-        <div key={item.map} className={cx('tab', { active: item.map === activeMap })}>
+        <div key={item.map} className={cx('tab', { active: item.map === activeMap })} onClick={() => setCurrentMap(item.map)}>
           {item.name}
         </div>
       ))}

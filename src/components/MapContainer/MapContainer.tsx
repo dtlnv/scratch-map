@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './MapContainer.scss';
 import Map from './Map';
 import ColorPicker from '../ColorPicker/ColorPicker';
@@ -9,8 +9,13 @@ interface MapContainerInterface {
 
 const MapContainer: React.FC<MapContainerInterface> = ({ name }) => {
   const [hoverTitle, setHoverTitle] = useState<string | null>('');
-  const [showTitle, setShowTitle] = useState<boolean>(true);
+  const [showTitle, setShowTitle] = useState<boolean>(false);
   const [showColorPicker, setShowColorPicker] = useState<boolean>(true);
+
+  useEffect(() => {
+    setShowColorPicker(false);
+    setShowTitle(false);
+  }, [name]);
 
   const clickAction = (e: React.MouseEvent<HTMLDivElement>) => {
     const target = e.target as SVGPathElement;
@@ -24,7 +29,16 @@ const MapContainer: React.FC<MapContainerInterface> = ({ name }) => {
     // Make current element (region) active
     if (target.tagName === 'path') {
       target.classList.add('active');
+      setShowColorPicker(true);
       setShowTitle(false);
+    } else {
+      setShowColorPicker(false);
+    }
+
+    const colorPicker: HTMLDivElement | null = document.querySelector('.color-picker');
+    if (colorPicker) {
+      colorPicker.style.top = `${e.pageY - 50}px`;
+      colorPicker.style.left = `${e.pageX - colorPicker.scrollWidth / 2}px`;
     }
   };
 
@@ -46,10 +60,8 @@ const MapContainer: React.FC<MapContainerInterface> = ({ name }) => {
     if (target.tagName === 'path' && target.getAttribute('title')) {
       const titleElement: HTMLDivElement | null = document.querySelector('.title');
       if (titleElement) {
-        console.log('titleElement', titleElement.scrollWidth);
-
-        titleElement.style.top = `${e.clientY - 50}px`;
-        titleElement.style.left = `${e.clientX - titleElement.scrollWidth / 2}px`;
+        titleElement.style.top = `${e.pageY - 50}px`;
+        titleElement.style.left = `${e.pageX - titleElement.scrollWidth / 2}px`;
       }
     }
   };
@@ -57,7 +69,7 @@ const MapContainer: React.FC<MapContainerInterface> = ({ name }) => {
   return (
     <div className='map-container' onClick={clickAction} onMouseOver={hoverAction} onMouseMove={mouseMoveAction}>
       {hoverTitle && showTitle && <div className='title'>{hoverTitle}</div>}
-      {showColorPicker && <ColorPicker />}
+      <ColorPicker show={showColorPicker} />
       <Map name={name} />
     </div>
   );
