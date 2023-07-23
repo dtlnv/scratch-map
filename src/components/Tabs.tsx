@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import './Tabs.scss';
 import cx from 'classnames';
 
 const tabsListDefault = [

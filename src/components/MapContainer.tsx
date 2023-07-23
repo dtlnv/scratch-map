@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import './MapContainer.scss';
 import Map from './Map';
-import ColorPicker from '../ColorPicker/ColorPicker';
+import ColorPicker from './ColorPicker';
 
 interface MapContainerInterface {
   name: string;

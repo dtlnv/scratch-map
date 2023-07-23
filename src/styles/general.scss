@@ -2,6 +2,13 @@
 @import './fonts/fonts.scss';
 @import './constants.scss';
 @import './reset.css';
+@import './components/ColorPicker.scss';
+@import './components/ColorsBlock.scss';
+@import './components/Main.scss';
+@import './components/MapContainer.scss';
+@import './components/MenuItem.scss';
+@import './components/Sidebar.scss';
+@import './components/Tabs.scss';
 
 * {
   font-family: 'Nunito', sans-serif !important;

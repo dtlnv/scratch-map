@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import './Main.scss';
-import MapContainer from '../MapContainer/MapContainer';
-import Sidebar from '../Sidebar/Sidebar';
-import Tabs from '../Tabs/Tabs';
+import MapContainer from './MapContainer';
+import Sidebar from './Sidebar';
+import Tabs from './Tabs';
 
 const Main: React.FC = () => {
   const [currentMap, setCurrentMap] = useState<string>('world');

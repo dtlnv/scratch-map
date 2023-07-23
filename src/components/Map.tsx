@@ -9,7 +9,7 @@ const Map: React.FC<MapInterface> = ({ name }) => {
   const [viewBox, setViewBox] = useState<string>('0 0 0 0');
 
   useEffect(() => {
-    import(`../../assets/svg-maps/${name}.svg`).then((module) => {
+    import(`../assets/svg-maps/${name}.svg`).then((module) => {
       setSvgComponent(() => module.default);
     });
   }, [name]);

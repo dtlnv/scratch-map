@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import './ColorPicker.scss';
 import cx from 'classnames';
 
 interface ColorPickerInterface {

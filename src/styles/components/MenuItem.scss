@@ -12,4 +12,11 @@
   &:hover {
     background-color: $lightGrey2;
   }
+  .icon {
+    width: 24px;
+    height: 24px;
+    &.add {
+      background: url('./components/icons/add.svg');
+    }
+  }
 }
