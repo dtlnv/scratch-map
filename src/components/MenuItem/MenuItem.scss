@@ -1,0 +1,14 @@
+@import '../../styles/constants.scss';
+
+.menu-item {
+  display: flex;
+  width: 200px;
+  padding: 10px 12px;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  border-radius: 7px;
+  &:hover {
+    background-color: $lightGrey2;
+  }
+}

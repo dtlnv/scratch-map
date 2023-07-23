@@ -1,0 +1,36 @@
+@import '../../styles/constants.scss';
+
+.color-picker {
+  background-color: $white;
+  display: flex;
+  gap: 16px;
+  padding: 8px;
+  box-shadow: $darkBoxShadow;
+  border-radius: $defaultBorderRadius;
+  .color {
+    width: 24px;
+    height: 24px;
+    background-color: $lightGrey;
+    border-radius: 100px;
+
+    &.color-1 {
+      background-color: $mapColor1;
+    }
+
+    &.color-2 {
+      background-color: $mapColor2;
+    }
+
+    &.color-3 {
+      background-color: $mapColor3;
+    }
+
+    &.color-4 {
+      background-color: $mapColor4;
+    }
+
+    &.color-5 {
+      background-color: $mapColor5;
+    }
+  }
+}

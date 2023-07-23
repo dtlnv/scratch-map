@@ -1,0 +1,16 @@
+@import '../../styles/constants.scss';
+
+.layout {
+  display: flex;
+  width: 100vw;
+  gap: 24px;
+  justify-content: center;
+  .left {
+    // background-color: #faf;
+  }
+  .right {
+    margin: 24px 0px;
+    width: 232px;
+    position: relative;
+  }
+}

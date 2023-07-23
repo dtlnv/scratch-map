@@ -1,0 +1,14 @@
+// @import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');
+@import './fonts/fonts.scss';
+@import './constants.scss';
+@import './reset.css';
+
+* {
+  font-family: 'Nunito', sans-serif !important;
+}
+
+body {
+  background-color: $pageBackground;
+  margin: 0px;
+  padding: 0px;
+}
