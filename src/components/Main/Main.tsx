@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import './Main.scss';
 import MapContainer from '../MapContainer/MapContainer';
 import Sidebar from '../Sidebar/Sidebar';
+import Tabs from '../Tabs/Tabs';
 
 const Main: React.FC = () => {
   return (
     <div className='layout'>
       <div className='left'>
-        <MapContainer name='world' />
+        <Tabs activeMap='urkaine' />
+        <MapContainer name='ukraine' />
       </div>
       <div className='right'>
         <Sidebar />
