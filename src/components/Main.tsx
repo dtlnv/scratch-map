@@ -77,7 +77,7 @@ const Main: React.FC = () => {
         <MapContainer name={currentMap} selections={storage[currentMap] || {}} saveRegion={saveRegion} />
       </div>
       <div className='right'>
-        <Sidebar clearMapAction={clearMapAction} />
+        <Sidebar clearMapAction={clearMapAction} selections={storage[currentMap] || {}} />
       </div>
     </div>
   );

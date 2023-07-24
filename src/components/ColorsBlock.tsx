@@ -1,8 +1,15 @@
 import React, { useEffect, useState } from 'react';
 
-interface ColorsBlockInterface {}
+interface ColorsBlockInterface {
+  selections: { [key: string]: string | null } | null;
+}
 
-const ColorsBlock: React.FC<ColorsBlockInterface> = ({}) => {
+const ColorsBlock: React.FC<ColorsBlockInterface> = ({ selections }) => {
+  useEffect(() => {
+    console.log('selections', selections);
+    
+  }, [selections]);
+
   return (
     <div className='colors-block'>
       <div className='color-block'>

@@ -4,9 +4,10 @@ import MenuItem from './MenuItem';
 
 interface SidebarInterface {
   clearMapAction: Function;
+  selections: { [key: string]: string | null } | null;
 }
 
-const Sidebar: React.FC<SidebarInterface> = ({ clearMapAction }) => {
+const Sidebar: React.FC<SidebarInterface> = ({ clearMapAction, selections }) => {
   return (
     <div className='sidebar'>
       <div className='block'>
@@ -17,7 +18,7 @@ const Sidebar: React.FC<SidebarInterface> = ({ clearMapAction }) => {
         <MenuItem icon='remove'>Remove Map</MenuItem>
       </div>
       <div className='block'>
-        <ColorsBlock />
+        <ColorsBlock selections={selections} />
       </div>
     </div>
   );
