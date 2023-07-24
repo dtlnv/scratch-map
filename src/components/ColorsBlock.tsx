@@ -1,37 +1,36 @@
 import React, { useEffect, useState } from 'react';
+import cx from 'classnames';
+import { ColorsNumber, Labels } from '../constants';
 
 interface ColorsBlockInterface {
-  selections: { [key: string]: string | null } | null;
+  selections: { [key: string]: string } | null;
 }
 
 const ColorsBlock: React.FC<ColorsBlockInterface> = ({ selections }) => {
+  const [counters, setCounters] = useState<{ [key: string]: number }>();
+
   useEffect(() => {
-    console.log('selections', selections);
-    
+    const values: { [key: string]: number } = {};
+
+    for (let i = 1; i <= ColorsNumber; i++) {
+      values[`color-${i}`] = 0;
+    }
+
+    for (let region in selections) {
+      const color: string = selections[region];
+      values[color] = values[color] + 1;
+    }
+    setCounters(values);
   }, [selections]);
 
   return (
     <div className='colors-block'>
-      <div className='color-block'>
-        <div className='color color-1' />
-        Visited
-      </div>
-      <div className='color-block'>
-        <div className='color color-2' />
-        Transit
-      </div>
-      <div className='color-block'>
-        <div className='color color-3' />
-        Want to visit
-      </div>
-      <div className='color-block'>
-        <div className='color color-4' />
-        Favorite
-      </div>
-      <div className='color-block'>
-        <div className='color color-5' />
-        Never again
-      </div>
+      {Object.keys(Labels).map((color) => (
+        <div className='color-block' key={color}>
+          <div className={cx('color-dot', color)} />
+          {Labels[color]} ({counters?.[color]})
+        </div>
+      ))}
     </div>
   );
 };

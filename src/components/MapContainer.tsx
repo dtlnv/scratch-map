@@ -41,11 +41,11 @@ const MapContainer: React.FC<MapContainerInterface> = ({ name, selections, saveR
     }
   }, [activeRegion]);
 
-  /**
-   * Clicking on the map will set a new active region.
-   * Clicking on somewhere else will remove the active region and hide the color picker.
-   */
   useEffect(() => {
+    /**
+     * Clicking on the map will set a new active region.
+     * Clicking on somewhere else will remove the active region and hide the color picker.
+     */
     function clickAction(e: MouseEvent): void {
       const target = e.target as HTMLElement;
 
@@ -69,26 +69,28 @@ const MapContainer: React.FC<MapContainerInterface> = ({ name, selections, saveR
       setShowColorPicker(false);
     }
 
+    /**
+     * Update a region title.
+     */
+    function hoverAction(e: MouseEvent): void {
+      const target = e.target as HTMLDivElement;
+
+      if (target.tagName === 'path' && target.getAttribute('title')) {
+        const title: string | null = target.getAttribute('title');
+        setHoverTitle(title);
+      } else {
+        setHoverTitle('');
+      }
+    }
+
     document.addEventListener('click', clickAction);
+    document.addEventListener('mouseover', hoverAction);
 
     return () => {
       document.removeEventListener('click', clickAction);
+      document.removeEventListener('mouseover', hoverAction);
     };
   }, []);
-
-  /**
-   * Update a region title.
-   */
-  const hoverAction = (e: React.MouseEvent<HTMLDivElement>) => {
-    const target = e.target as HTMLDivElement;
-
-    if (target.tagName === 'path' && target.getAttribute('title')) {
-      const title: string | null = target.getAttribute('title');
-      setHoverTitle(title);
-    } else {
-      setHoverTitle('');
-    }
-  };
 
   /**
    * Move the region title with a mouse.
@@ -127,7 +129,7 @@ const MapContainer: React.FC<MapContainerInterface> = ({ name, selections, saveR
   };
 
   return (
-    <div className='map-container' onMouseOver={hoverAction} onMouseMove={mouseMoveAction}>
+    <div className='map-container' onMouseMove={mouseMoveAction}>
       <div className='title' style={{ display: hoverTitle ? 'flex' : 'none' }}>
         {hoverTitle}
       </div>

@@ -10,30 +10,16 @@
     display: flex;
     align-items: center;
     gap: 16px;
-    .color {
+    .color-dot {
       width: 24px;
       height: 24px;
       background-color: $lightGrey;
       border-radius: 100px;
 
-      &.color-1 {
-        background-color: $mapColor1;
-      }
-
-      &.color-2 {
-        background-color: $mapColor2;
-      }
-
-      &.color-3 {
-        background-color: $mapColor3;
-      }
-
-      &.color-4 {
-        background-color: $mapColor4;
-      }
-
-      &.color-5 {
-        background-color: $mapColor5;
+      @each $color, $value in $colorMap {
+        &.#{$color} {
+          background-color: $value;
+        }
       }
     }
   }

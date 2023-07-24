@@ -12,6 +12,11 @@ interface StorageInterface {
 const Main: React.FC = () => {
   const [currentMap, setCurrentMap] = useState<string>('world');
   const [storage, setStorage] = useState<StorageInterface>({});
+  const [selections, setSelections] = useState<{ [key: string]: string | null }>({});
+
+  useEffect(() => {
+    setSelections({ ...storage[currentMap] });
+  }, [currentMap, storage]);
 
   /**
    * Update data of 'storage' state.
@@ -29,6 +34,7 @@ const Main: React.FC = () => {
         [region]: color,
       };
     }
+
     setStorage(tempStorage);
 
     try {
@@ -74,10 +80,10 @@ const Main: React.FC = () => {
     <div className='layout'>
       <div className='left'>
         <Tabs activeMap={currentMap} setCurrentMap={setCurrentMap} />
-        <MapContainer name={currentMap} selections={storage[currentMap] || {}} saveRegion={saveRegion} />
+        <MapContainer name={currentMap} selections={selections || {}} saveRegion={saveRegion} />
       </div>
       <div className='right'>
-        <Sidebar clearMapAction={clearMapAction} selections={storage[currentMap] || {}} />
+        <Sidebar clearMapAction={clearMapAction} selections={selections || {}} />
       </div>
     </div>
   );
