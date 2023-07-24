@@ -4,9 +4,11 @@ import ColorPicker from './ColorPicker';
 
 interface MapContainerInterface {
   name: string;
+  selections: { [key: string]: string | null } | null;
+  saveRegion: Function;
 }
 
-const MapContainer: React.FC<MapContainerInterface> = ({ name }) => {
+const MapContainer: React.FC<MapContainerInterface> = ({ name, selections, saveRegion }) => {
   const [hoverTitle, setHoverTitle] = useState<string | null>(null);
   const [showColorPicker, setShowColorPicker] = useState<boolean>(true);
   const [activeRegion, setActiveRegion] = useState<string | null>(null);
@@ -104,12 +106,17 @@ const MapContainer: React.FC<MapContainerInterface> = ({ name }) => {
 
   /**
    * Color picker callback function.
+   * Save current data in the storage.
    * @param color string | null
    */
   const selectColorAction = (color: string | null) => {
     const active: HTMLDivElement | null = document.querySelector(`#${activeRegion}`);
+
+    if (activeRegion && (color || (!color && selections?.[activeRegion]))) {
+      saveRegion(activeRegion, color);
+    }
+
     setActiveRegion(null);
-    console.log('set', color, 'for', activeRegion);
     if (active) {
       if (color) {
         active.setAttribute('class', color);
@@ -125,7 +132,7 @@ const MapContainer: React.FC<MapContainerInterface> = ({ name }) => {
         {hoverTitle}
       </div>
       <ColorPicker selectColor={selectColorAction} show={showColorPicker} />
-      <Map name={name} />
+      <Map name={name} selections={selections} />
     </div>
   );
 };

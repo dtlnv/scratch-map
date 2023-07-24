@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 
 interface MapInterface {
   name: string;
+  selections: { [key: string]: string | null } | null;
 }
 
-const Map: React.FC<MapInterface> = ({ name }) => {
+const Map: React.FC<MapInterface> = ({ name, selections }) => {
   const [SvgComponent, setSvgComponent] = useState<React.FunctionComponent<React.SVGAttributes<SVGElement>> | null>(null);
   const [viewBox, setViewBox] = useState<string>('0 0 0 0');
 
@@ -23,6 +24,16 @@ const Map: React.FC<MapInterface> = ({ name }) => {
         setViewBox(`0 0 ${width} ${height}`);
         svgElement.removeAttribute('width');
         svgElement.removeAttribute('height');
+
+        if (selections) {
+          for (let region in selections) {
+            const regionArea: HTMLDivElement | null = document.querySelector(`#${region}`);
+            const color: string | null = selections[region];
+            if (regionArea && color) {
+              regionArea.setAttribute('class', color);
+            }
+          }
+        }
       }
     }
   }, [SvgComponent]);
