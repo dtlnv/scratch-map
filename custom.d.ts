@@ -1,4 +1,4 @@
-declare module "*.svg" {
+declare module "assets/swg-maps/*.svg" {
     const content: React.FunctionComponent<React.SVGAttributes<SVGElement>>;
     export default content;
 }

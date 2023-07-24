@@ -13,11 +13,11 @@ const config: GatsbyConfig = {
     "gatsby-plugin-sass",
     {
       resolve: "gatsby-plugin-react-svg",
-      // options: {
-      //   rule: {
-      //     include: /assets/ // See below to configure properly
-      //   }
-      // }
+      options: {
+        rule: {
+          include: /assets/ // See below to configure properly
+        }
+      }
     }
   ]
 };

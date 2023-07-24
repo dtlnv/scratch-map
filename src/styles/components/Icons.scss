@@ -1,0 +1,14 @@
+@import '../../styles/constants.scss';
+
+.icon {
+  width: 24px;
+  height: 24px;
+  background-repeat: no-repeat;
+  background-position: center;
+  &.add {
+    background-image: url('./components/icons/add.svg');
+  }
+  &.remove {
+    background-image: url('./components/icons/remove.svg');
+  }
+}
