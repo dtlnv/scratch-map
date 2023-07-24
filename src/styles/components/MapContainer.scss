@@ -42,6 +42,25 @@
       &.active {
         fill: $regionActiveFill;
       }
+      &.color-1 {
+        fill: $mapColor1;
+      }
+
+      &.color-2 {
+        fill: $mapColor2;
+      }
+
+      &.color-3 {
+        fill: $mapColor3;
+      }
+
+      &.color-4 {
+        fill: $mapColor4;
+      }
+
+      &.color-5 {
+        fill: $mapColor5;
+      }
     }
   }
 }

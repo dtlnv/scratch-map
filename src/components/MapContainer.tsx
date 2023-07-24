@@ -7,43 +7,78 @@ interface MapContainerInterface {
 }
 
 const MapContainer: React.FC<MapContainerInterface> = ({ name }) => {
-  const [hoverTitle, setHoverTitle] = useState<string | null>('');
-  const [showTitle, setShowTitle] = useState<boolean>(false);
+  const [hoverTitle, setHoverTitle] = useState<string | null>(null);
   const [showColorPicker, setShowColorPicker] = useState<boolean>(true);
+  const [activeRegion, setActiveRegion] = useState<string | null>(null);
+  const titleElement: HTMLDivElement | null = document.querySelector('.title');
 
+  /**
+   * Hide the color picker when new map is loaded.
+   */
   useEffect(() => {
     setShowColorPicker(false);
-    setShowTitle(false);
   }, [name]);
 
-  const clickAction = (e: React.MouseEvent<HTMLDivElement>) => {
-    const target = e.target as SVGPathElement;
-
-    // Remove previous active state
+  /**
+   * Remove all '.active' classes.
+   * If there is a new active region, add class '.active',
+   * otherwise hide the color picker.
+   */
+  useEffect(() => {
     const activesRegion: NodeListOf<SVGClipPathElement> = document.querySelectorAll('.map-container .active');
     activesRegion.forEach((element: SVGClipPathElement) => {
       element.classList.remove('active');
     });
 
-    // Make current element (region) active
-    if (target.tagName === 'path') {
-      target.classList.add('active');
+    if (activeRegion) {
       setShowColorPicker(true);
-      setShowTitle(false);
+      const newActive: HTMLDivElement | null = document.querySelector(`#${activeRegion}`);
+      newActive?.classList.add('active');
     } else {
       setShowColorPicker(false);
     }
+  }, [activeRegion]);
 
-    const colorPicker: HTMLDivElement | null = document.querySelector('.color-picker');
-    if (colorPicker) {
-      colorPicker.style.top = `${e.pageY - 50}px`;
-      colorPicker.style.left = `${e.pageX - colorPicker.scrollWidth / 2}px`;
+  /**
+   * Clicking on the map will set a new active region.
+   * Clicking on somewhere else will remove the active region and hide the color picker.
+   */
+  useEffect(() => {
+    function clickAction(e: MouseEvent): void {
+      const target = e.target as HTMLElement;
+
+      if (target.closest('.color-picker')) {
+        e.preventDefault();
+        return;
+      }
+
+      // Make current element (region) active
+      if (target.tagName === 'path' && 'id' in target && !target.classList.contains('active')) {
+        setActiveRegion(target.id);
+        const colorPicker: HTMLDivElement | null = document.querySelector('.color-picker');
+        if (colorPicker) {
+          colorPicker.style.top = `${e.pageY - 50}px`;
+          colorPicker.style.left = `${e.pageX - colorPicker.scrollWidth / 2}px`;
+        }
+        return;
+      }
+
+      setActiveRegion(null);
+      setShowColorPicker(false);
     }
-  };
 
+    document.addEventListener('click', clickAction);
+
+    return () => {
+      document.removeEventListener('click', clickAction);
+    };
+  }, []);
+
+  /**
+   * Update a region title.
+   */
   const hoverAction = (e: React.MouseEvent<HTMLDivElement>) => {
     const target = e.target as HTMLDivElement;
-    setShowTitle(true);
 
     if (target.tagName === 'path' && target.getAttribute('title')) {
       const title: string | null = target.getAttribute('title');
@@ -53,11 +88,13 @@ const MapContainer: React.FC<MapContainerInterface> = ({ name }) => {
     }
   };
 
+  /**
+   * Move the region title with a mouse.
+   */
   const mouseMoveAction = (e: React.MouseEvent<HTMLDivElement>) => {
     const target = e.target as HTMLDivElement;
 
     if (target.tagName === 'path' && target.getAttribute('title')) {
-      const titleElement: HTMLDivElement | null = document.querySelector('.title');
       if (titleElement) {
         titleElement.style.top = `${e.pageY - 50}px`;
         titleElement.style.left = `${e.pageX - titleElement.scrollWidth / 2}px`;
@@ -65,10 +102,29 @@ const MapContainer: React.FC<MapContainerInterface> = ({ name }) => {
     }
   };
 
+  /**
+   * Color picker callback function.
+   * @param color string | null
+   */
+  const selectColorAction = (color: string | null) => {
+    const active: HTMLDivElement | null = document.querySelector(`#${activeRegion}`);
+    setActiveRegion(null);
+    console.log('set', color, 'for', activeRegion);
+    if (active) {
+      if (color) {
+        active.setAttribute('class', color);
+      } else {
+        active.removeAttribute('class');
+      }
+    }
+  };
+
   return (
-    <div className='map-container' onClick={clickAction} onMouseOver={hoverAction} onMouseMove={mouseMoveAction}>
-      {hoverTitle && showTitle && <div className='title'>{hoverTitle}</div>}
-      <ColorPicker show={showColorPicker} />
+    <div className='map-container' onMouseOver={hoverAction} onMouseMove={mouseMoveAction}>
+      <div className='title' style={{ display: hoverTitle ? 'flex' : 'none' }}>
+        {hoverTitle}
+      </div>
+      <ColorPicker selectColor={selectColorAction} show={showColorPicker} />
       <Map name={name} />
     </div>
   );

@@ -22,6 +22,11 @@
     height: 24px;
     background-color: $lightGrey;
     border-radius: 100px;
+    cursor: pointer;
+    transition: scale 0.1s;
+    &:hover {
+      scale: 1.1;
+    }
 
     &.color-1 {
       background-color: $mapColor1;

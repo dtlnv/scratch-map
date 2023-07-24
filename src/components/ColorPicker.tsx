@@ -3,17 +3,20 @@ import cx from 'classnames';
 
 interface ColorPickerInterface {
   show: boolean;
+  selectColor: Function;
 }
 
-const ColorPicker: React.FC<ColorPickerInterface> = ({ show }) => {
+const colorsNumber: number = 5;
+
+const ColorPicker: React.FC<ColorPickerInterface> = ({ selectColor, show }) => {
   return (
     <div className={cx('color-picker', { show })}>
-      <div className='color color-1' />
-      <div className='color color-2' />
-      <div className='color color-3' />
-      <div className='color color-4' />
-      <div className='color color-5' />
-      <div className='color clear'>×</div>
+      {Array.from({ length: colorsNumber }).map((_, i) => (
+        <div key={i} className={`color color-${i + 1}`} onClick={() => selectColor(`color-${i + 1}`)} />
+      ))}
+      <div className='color clear' onClick={() => selectColor(null)}>
+        ×
+      </div>
     </div>
   );
 };
