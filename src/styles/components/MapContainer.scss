@@ -38,9 +38,10 @@
       &:hover {
         cursor: pointer;
         fill: $regionHoverFill;
+        opacity: .85;
       }
       &.active {
-        fill: $regionActiveFill;
+        fill: $regionActiveFill !important;
       }
 
       @each $color, $value in $colorMap {

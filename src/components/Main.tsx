@@ -5,14 +5,14 @@ import Tabs from './Tabs';
 
 interface StorageInterface {
   [key: string]: {
-    [key: string]: string | null;
+    [key: string]: string;
   };
 }
 
 const Main: React.FC = () => {
   const [currentMap, setCurrentMap] = useState<string>('world');
   const [storage, setStorage] = useState<StorageInterface>({});
-  const [selections, setSelections] = useState<{ [key: string]: string | null }>({});
+  const [selections, setSelections] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
     setSelections({ ...storage[currentMap] });
@@ -28,7 +28,7 @@ const Main: React.FC = () => {
 
     if (color === null && tempStorage[currentMap] && tempStorage[currentMap][region]) {
       delete tempStorage[currentMap][region];
-    } else {
+    } else if (color) {
       tempStorage[currentMap] = {
         ...tempStorage[currentMap],
         [region]: color,
@@ -83,7 +83,7 @@ const Main: React.FC = () => {
         <MapContainer name={currentMap} selections={selections || {}} saveRegion={saveRegion} />
       </div>
       <div className='right'>
-        <Sidebar clearMapAction={clearMapAction} selections={selections || {}} />
+        <Sidebar clearMapAction={clearMapAction} selections={selections} />
       </div>
     </div>
   );

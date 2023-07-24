@@ -48,6 +48,7 @@ const MapContainer: React.FC<MapContainerInterface> = ({ name, selections, saveR
      */
     function clickAction(e: MouseEvent): void {
       const target = e.target as HTMLElement;
+      setHoverTitle('');
 
       if (target.closest('.color-picker')) {
         e.preventDefault();
@@ -80,6 +81,9 @@ const MapContainer: React.FC<MapContainerInterface> = ({ name, selections, saveR
         setHoverTitle(title);
       } else {
         setHoverTitle('');
+        if (titleElement) {
+          titleElement.style.top = `-50px`;
+        }
       }
     }
 
@@ -97,8 +101,7 @@ const MapContainer: React.FC<MapContainerInterface> = ({ name, selections, saveR
    */
   const mouseMoveAction = (e: React.MouseEvent<HTMLDivElement>) => {
     const target = e.target as HTMLDivElement;
-
-    if (target.tagName === 'path' && target.getAttribute('title')) {
+    if (hoverTitle && target.tagName === 'path' && target.getAttribute('title')) {
       if (titleElement) {
         titleElement.style.top = `${e.pageY - 50}px`;
         titleElement.style.left = `${e.pageX - titleElement.scrollWidth / 2}px`;
@@ -119,12 +122,8 @@ const MapContainer: React.FC<MapContainerInterface> = ({ name, selections, saveR
     }
 
     setActiveRegion(null);
-    if (active) {
-      if (color) {
-        active.setAttribute('class', color);
-      } else {
-        active.removeAttribute('class');
-      }
+    if (active && !color) {
+      active.removeAttribute('class');
     }
   };
 

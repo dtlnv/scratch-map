@@ -1,4 +1,4 @@
-export const ColorsNumber: number = 6;
+export const ColorsNumber: number = 5;
 
 export const Labels: { [key: string]: string } = {
     'color-1': 'Visited',

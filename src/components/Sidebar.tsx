@@ -4,7 +4,7 @@ import MenuItem from './MenuItem';
 
 interface SidebarInterface {
   clearMapAction: Function;
-  selections: { [key: string]: string | null } | null;
+  selections: { [key: string]: string };
 }
 
 const Sidebar: React.FC<SidebarInterface> = ({ clearMapAction, selections }) => {
@@ -12,7 +12,7 @@ const Sidebar: React.FC<SidebarInterface> = ({ clearMapAction, selections }) => 
     <div className='sidebar'>
       <div className='block'>
         <MenuItem icon='add'>Add Map</MenuItem>
-        <MenuItem icon='remove' onClick={clearMapAction}>
+        <MenuItem icon='clear' onClick={clearMapAction}>
           Clear Map
         </MenuItem>
         <MenuItem icon='remove'>Remove Map</MenuItem>
