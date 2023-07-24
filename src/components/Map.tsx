@@ -16,6 +16,23 @@ const Map: React.FC<MapInterface> = ({ name, selections }) => {
   }, [name]);
 
   useEffect(() => {
+    if (selections && Object.keys(selections).length > 0) {
+      for (let region in selections) {
+        const regionArea: HTMLDivElement | null = document.querySelector(`#${region}`);
+        const color: string | null = selections[region];
+        if (regionArea && color) {
+          regionArea.setAttribute('class', color);
+        }
+      }
+    } else {
+      const allRegions: NodeListOf<Element> | null = document.querySelectorAll(`.map-container svg path[class]`);
+      allRegions.forEach((element) => {
+        element.removeAttribute('class');
+      });
+    }
+  }, [SvgComponent, selections]);
+
+  useEffect(() => {
     const svgElement: HTMLDivElement | null = document.querySelector('.map-container svg');
     if (svgElement) {
       const width: string | null = svgElement?.getAttribute('width');
@@ -24,16 +41,6 @@ const Map: React.FC<MapInterface> = ({ name, selections }) => {
         setViewBox(`0 0 ${width} ${height}`);
         svgElement.removeAttribute('width');
         svgElement.removeAttribute('height');
-
-        if (selections) {
-          for (let region in selections) {
-            const regionArea: HTMLDivElement | null = document.querySelector(`#${region}`);
-            const color: string | null = selections[region];
-            if (regionArea && color) {
-              regionArea.setAttribute('class', color);
-            }
-          }
-        }
       }
     }
   }, [SvgComponent]);

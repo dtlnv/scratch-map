@@ -50,9 +50,25 @@ const Main: React.FC = () => {
         setStorage(savedStorage);
       }
     } catch (err) {
-      console.error('Cannot save a data:', err);
+      console.error('Cannot get data from the storage:', err);
     }
   }, []);
+
+  const clearMapAction = (): void => {
+    if (window.confirm('Are you sure?')) {
+      try {
+        const dataFromStorage: string | null = localStorage.getItem('map');
+        if (dataFromStorage) {
+          const savedStorage: StorageInterface = JSON.parse(dataFromStorage);
+          delete savedStorage[currentMap];
+          setStorage(savedStorage);
+          localStorage.setItem('map', JSON.stringify(savedStorage));
+        }
+      } catch (err) {
+        console.error('Cannot clear a map:', err);
+      }
+    }
+  };
 
   return (
     <div className='layout'>
@@ -61,7 +77,7 @@ const Main: React.FC = () => {
         <MapContainer name={currentMap} selections={storage[currentMap] || {}} saveRegion={saveRegion} />
       </div>
       <div className='right'>
-        <Sidebar />
+        <Sidebar clearMapAction={clearMapAction} />
       </div>
     </div>
   );
