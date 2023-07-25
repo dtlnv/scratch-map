@@ -11,7 +11,7 @@ interface MapContainerInterface {
 const MapContainer: React.FC<MapContainerInterface> = ({ name, selections, saveRegion }) => {
   const [hoverTitle, setHoverTitle] = useState<string | null>(null);
   const [showColorPicker, setShowColorPicker] = useState<boolean>(true);
-  const [activeRegion, setActiveRegion] = useState<string | null>(null);
+  const [activeRegion, setActiveRegion] = useState<{ [key: string]: string } | null>(null);
   const titleElement: HTMLDivElement | null = document.querySelector('.title');
 
   /**
@@ -34,7 +34,7 @@ const MapContainer: React.FC<MapContainerInterface> = ({ name, selections, saveR
 
     if (activeRegion) {
       setShowColorPicker(true);
-      const newActive: HTMLDivElement | null = document.querySelector(`#${activeRegion}`);
+      const newActive: HTMLDivElement | null = document.querySelector(`#${activeRegion.id}`);
       newActive?.classList.add('active');
     } else {
       setShowColorPicker(false);
@@ -57,7 +57,7 @@ const MapContainer: React.FC<MapContainerInterface> = ({ name, selections, saveR
 
       // Make current element (region) active
       if (target.tagName === 'path' && 'id' in target && !target.classList.contains('active')) {
-        setActiveRegion(target.id);
+        setActiveRegion({ id: target.id, title: target.getAttribute('title') || '' });
         const colorPicker: HTMLDivElement | null = document.querySelector('.color-picker');
         if (colorPicker) {
           colorPicker.style.top = `${e.pageY - 40}px`;
@@ -65,8 +65,7 @@ const MapContainer: React.FC<MapContainerInterface> = ({ name, selections, saveR
           colorPicker.style.right = `auto`;
 
           const rects = colorPicker.getBoundingClientRect();
-          const isFullyVisible =
-            rects.top >= 0 && rects.left >= 0 && rects.bottom <= window.innerHeight && rects.right <= window.innerWidth;
+          const isFullyVisible = rects.top >= 0 && rects.left >= 0 && rects.bottom <= window.outerWidth && rects.right <= window.outerWidth;
 
           if (!isFullyVisible) {
             if (rects.x < 0) {
@@ -130,10 +129,10 @@ const MapContainer: React.FC<MapContainerInterface> = ({ name, selections, saveR
    * @param color string | null
    */
   const selectColorAction = (color: string | null) => {
-    const active: HTMLDivElement | null = document.querySelector(`#${activeRegion}`);
+    const active: HTMLDivElement | null = document.querySelector(`#${activeRegion?.id}`);
 
-    if (activeRegion && (color || (!color && selections?.[activeRegion]))) {
-      saveRegion(activeRegion, color);
+    if (activeRegion && (color || (!color && selections?.[activeRegion?.id]))) {
+      saveRegion(activeRegion.id, color);
     }
 
     setActiveRegion(null);
@@ -147,7 +146,7 @@ const MapContainer: React.FC<MapContainerInterface> = ({ name, selections, saveR
       <div className='title' style={{ display: hoverTitle ? 'flex' : 'none' }}>
         {hoverTitle}
       </div>
-      <ColorPicker selectColor={selectColorAction} show={showColorPicker} />
+      <ColorPicker hoverTitle={activeRegion?.title} selectColor={selectColorAction} show={showColorPicker} />
       <Map name={name} selections={selections} />
     </div>
   );

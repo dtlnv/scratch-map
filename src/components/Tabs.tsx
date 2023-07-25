@@ -12,7 +12,7 @@ const tabsListDefault = [
   },
   {
     map: 'europe',
-    name: 'Countries of the Europe',
+    name: 'Europe',
   },
   {
     map: 'poland',
@@ -43,8 +43,6 @@ const Tabs: React.FC<TabsInterface> = ({ activeMap, setCurrentMap }) => {
 
   useEffect(() => {
     function resizeAction() {
-      console.log('window.innerWidth', window.innerWidth);
-
       setSelect(window.innerWidth < 768);
     }
     resizeAction();
