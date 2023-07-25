@@ -1,45 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import cx from 'classnames';
-
-const tabsListDefault = [
-  {
-    map: 'world',
-    name: 'World',
-  },
-  {
-    map: 'ukraine',
-    name: 'Ukraine',
-  },
-  {
-    map: 'europe',
-    name: 'Europe',
-  },
-  {
-    map: 'poland',
-    name: 'Poland',
-  },
-  {
-    map: 'canada',
-    name: 'Canada',
-  },
-  {
-    map: 'usa',
-    name: 'USA',
-  },
-];
+import Select from './Select';
+import Maps from '../maps.json';
 
 interface TabsInterface {
   activeMap: string;
+  mapsList: string[];
   setCurrentMap: (arg: string) => void;
 }
 
-const Tabs: React.FC<TabsInterface> = ({ activeMap, setCurrentMap }) => {
-  const [tabsList, setTabsList] = useState<{ name: string; map: string }[]>([]);
+const Tabs: React.FC<TabsInterface> = ({ activeMap, mapsList, setCurrentMap }) => {
+  const [tabsList, setTabsList] = useState<{ key: string; value: string }[]>([]);
   const [select, setSelect] = useState<boolean>(false);
 
   useEffect(() => {
-    setTabsList(tabsListDefault);
-  }, []);
+    const tabsList: { key: string; value: string }[] = [];
+
+    for (let map of mapsList) {
+      const value = Maps.find((region) => region.map === map)?.name;
+      if (value) {
+        tabsList.push({ key: map, value });
+      }
+    }
+
+    setTabsList(tabsList);
+  }, [mapsList]);
 
   useEffect(() => {
     function resizeAction() {
@@ -56,19 +41,11 @@ const Tabs: React.FC<TabsInterface> = ({ activeMap, setCurrentMap }) => {
   return (
     <div className='tabs'>
       {select && activeMap ? (
-        <label className='custom-select'>
-          <select onChange={(e) => setCurrentMap(e.target.value)} defaultValue={activeMap}>
-            {tabsList.map((item) => (
-              <option key={item.map} value={item.map}>
-                {item.name}
-              </option>
-            ))}
-          </select>
-        </label>
+        <Select defaultValue={activeMap} options={tabsList} onChange={(e) => setCurrentMap(e.target.value)} />
       ) : (
         tabsList.map((item) => (
-          <div key={item.map} className={cx('tab', { active: item.map === activeMap })} onClick={() => setCurrentMap(item.map)}>
-            {item.name}
+          <div key={item.key} className={cx('tab', { active: item.key === activeMap })} onClick={() => setCurrentMap(item.key)}>
+            {item.value}
           </div>
         ))
       )}

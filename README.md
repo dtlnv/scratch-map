@@ -1,6 +1,5 @@
 todo:
 - Add maps storage (tabs)
-- Fix tabs display for multiple maps (2 lines)
 - Implement adding a map
 - Implement removing a map
 - Add zoom

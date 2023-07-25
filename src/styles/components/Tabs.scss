@@ -6,39 +6,6 @@
   align-self: stretch;
   user-select: none;
   flex-wrap: wrap;
-  .custom-select {
-    position: relative;
-    background-color: $black;
-    color: $light1;
-    border-radius: 10px;
-    cursor: pointer;
-    width: 100%;
-    select {
-      cursor: pointer;
-      padding: 12px 16px;
-      padding-right: 36px;
-      color: $light1;
-      appearance: none;
-      background: none;
-      font-size: 16px;
-      width: 100%;
-      border: 0px;
-    }
-    &::after {
-      content: '';
-      background: url('./components/icons/arrow-down.svg') no-repeat center;
-      position: absolute;
-      top: 50%;
-      right: 10px;
-      width: 20px;
-      height: 20px;
-      transform: translateY(-50%);
-      pointer-events: none; /* Делаем псевдоэлемент непрозрачным для событий, чтобы не мешало кликать на select */
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-  }
   .tab {
     display: flex;
     justify-content: center;
