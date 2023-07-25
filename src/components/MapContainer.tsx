@@ -60,8 +60,23 @@ const MapContainer: React.FC<MapContainerInterface> = ({ name, selections, saveR
         setActiveRegion(target.id);
         const colorPicker: HTMLDivElement | null = document.querySelector('.color-picker');
         if (colorPicker) {
-          colorPicker.style.top = `${e.pageY - 50}px`;
+          colorPicker.style.top = `${e.pageY - 40}px`;
           colorPicker.style.left = `${e.pageX - colorPicker.scrollWidth / 2}px`;
+          colorPicker.style.right = `auto`;
+
+          const rects = colorPicker.getBoundingClientRect();
+          const isFullyVisible =
+            rects.top >= 0 && rects.left >= 0 && rects.bottom <= window.innerHeight && rects.right <= window.innerWidth;
+
+          if (!isFullyVisible) {
+            if (rects.x < 0) {
+              colorPicker.style.left = `8px`;
+              colorPicker.style.right = `auto`;
+            } else {
+              colorPicker.style.left = `auto`;
+              colorPicker.style.right = `8px`;
+            }
+          }
         }
         return;
       }
@@ -103,7 +118,7 @@ const MapContainer: React.FC<MapContainerInterface> = ({ name, selections, saveR
     const target = e.target as HTMLDivElement;
     if (hoverTitle && target.tagName === 'path' && target.getAttribute('title')) {
       if (titleElement) {
-        titleElement.style.top = `${e.pageY - 50}px`;
+        titleElement.style.top = `${e.pageY + 40}px`;
         titleElement.style.left = `${e.pageX - titleElement.scrollWidth / 2}px`;
       }
     }

@@ -12,7 +12,7 @@ const tabsListDefault = [
   },
   {
     map: 'europe',
-    name: 'Europe',
+    name: 'Countries of the Europe',
   },
   {
     map: 'poland',
@@ -35,17 +35,45 @@ interface TabsInterface {
 
 const Tabs: React.FC<TabsInterface> = ({ activeMap, setCurrentMap }) => {
   const [tabsList, setTabsList] = useState<{ name: string; map: string }[]>([]);
+  const [select, setSelect] = useState<boolean>(false);
+
   useEffect(() => {
     setTabsList(tabsListDefault);
   }, []);
 
+  useEffect(() => {
+    function resizeAction() {
+      console.log('window.innerWidth', window.innerWidth);
+
+      setSelect(window.innerWidth < 768);
+    }
+    resizeAction();
+    window.addEventListener('resize', resizeAction);
+
+    return () => {
+      window.removeEventListener('resize', resizeAction);
+    };
+  }, [tabsList]);
+
   return (
     <div className='tabs'>
-      {tabsList.map((item) => (
-        <div key={item.map} className={cx('tab', { active: item.map === activeMap })} onClick={() => setCurrentMap(item.map)}>
-          {item.name}
-        </div>
-      ))}
+      {select && activeMap ? (
+        <label className='custom-select'>
+          <select onChange={(e) => setCurrentMap(e.target.value)} defaultValue={activeMap}>
+            {tabsList.map((item) => (
+              <option key={item.map} value={item.map}>
+                {item.name}
+              </option>
+            ))}
+          </select>
+        </label>
+      ) : (
+        tabsList.map((item) => (
+          <div key={item.map} className={cx('tab', { active: item.map === activeMap })} onClick={() => setCurrentMap(item.map)}>
+            {item.name}
+          </div>
+        ))
+      )}
     </div>
   );
 };
