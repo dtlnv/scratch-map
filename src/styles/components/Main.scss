@@ -21,6 +21,8 @@
     width: 232px;
     max-width: 100%;
     position: relative;
-    margin: 0 auto;
+    @media (max-width: 768px) {
+      margin: 0 auto;
+    }
   }
 }

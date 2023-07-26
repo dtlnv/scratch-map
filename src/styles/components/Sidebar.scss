@@ -7,6 +7,10 @@
   align-items: center;
   gap: 24px;
   user-select: none;
+  word-break: break-all;
+  @media (max-width: 768px) {
+    flex-direction: column-reverse;
+  }
   .block {
     background-color: $white;
     box-shadow: $defaultBoxShadow;
@@ -18,5 +22,9 @@
     justify-content: center;
     align-items: center;
     gap: 2px;
+  }
+  .copyright {
+    color: $lightGrey;
+    font-size: 11px;
   }
 }

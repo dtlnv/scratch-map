@@ -1,8 +1,4 @@
 todo:
-- Add maps storage (tabs)
-- Implement adding a map
-- Implement removing a map
-- Add zoom
 - Change readme file
 - Add unit tests
 

@@ -133,6 +133,7 @@ const Main: React.FC = () => {
       </div>
       <div className='right'>
         <Sidebar
+          map={currentMap}
           addMapAction={addMapAction}
           clearMapAction={confirmWrap(clearMapAction)}
           removeMapAction={confirmWrap(removeMapAction)}

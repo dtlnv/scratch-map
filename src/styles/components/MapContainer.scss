@@ -9,6 +9,8 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  position: relative;
+  border-radius: $defaultBorderRadius;
 
   .title {
     position: absolute;
@@ -23,6 +25,33 @@
     box-shadow: $darkBoxShadow;
     cursor: default;
     user-select: none;
+    z-index: 5;
+  }
+
+  .zoom-buttons {
+    z-index: 100;
+    position: relative;
+    display: flex;
+    gap: 8px;
+    flex-direction: column;
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    button {
+      appearance: none;
+      border: 0px;
+      background-color: $white;
+      font-size: 18px;
+      color: $black;
+      padding: 8px;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 100px;
+      box-shadow: $defaultBoxShadow;
+    }
   }
 
   svg {
@@ -38,7 +67,7 @@
       &:hover {
         cursor: pointer;
         fill: $regionHoverFill;
-        opacity: .85;
+        opacity: 0.85;
       }
       &.active {
         fill: $regionActiveFill !important;
