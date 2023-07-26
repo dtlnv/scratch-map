@@ -9,10 +9,8 @@ interface MapContainerInterface {
 }
 
 const MapContainer: React.FC<MapContainerInterface> = ({ name, selections, saveRegion }) => {
-  const [hoverTitle, setHoverTitle] = useState<string | null>(null);
   const [showColorPicker, setShowColorPicker] = useState<boolean>(true);
   const [activeRegion, setActiveRegion] = useState<{ [key: string]: string } | null>(null);
-  const titleElement: HTMLDivElement | null = document.querySelector('.title');
 
   /**
    * Hide the color picker when new map is loaded.
@@ -48,7 +46,6 @@ const MapContainer: React.FC<MapContainerInterface> = ({ name, selections, saveR
      */
     function clickAction(e: MouseEvent): void {
       const target = e.target as HTMLElement;
-      setHoverTitle('');
 
       if (target.closest('.color-picker')) {
         e.preventDefault();
@@ -58,25 +55,6 @@ const MapContainer: React.FC<MapContainerInterface> = ({ name, selections, saveR
       // Make current element (region) active
       if (target.tagName === 'path' && 'id' in target && !target.classList.contains('active')) {
         setActiveRegion({ id: target.id, title: target.getAttribute('title') || '' });
-        const colorPicker: HTMLDivElement | null = document.querySelector('.color-picker');
-        if (colorPicker) {
-          colorPicker.style.top = `${e.pageY - 40}px`;
-          colorPicker.style.left = `${e.pageX - colorPicker.scrollWidth / 2}px`;
-          colorPicker.style.right = `auto`;
-
-          const rects = colorPicker.getBoundingClientRect();
-          const isFullyVisible = rects.top >= 0 && rects.left >= 0 && rects.bottom <= window.outerWidth && rects.right <= window.outerWidth;
-
-          if (!isFullyVisible) {
-            if (rects.x < 0) {
-              colorPicker.style.left = `8px`;
-              colorPicker.style.right = `auto`;
-            } else {
-              colorPicker.style.left = `auto`;
-              colorPicker.style.right = `8px`;
-            }
-          }
-        }
         return;
       }
 
@@ -84,44 +62,12 @@ const MapContainer: React.FC<MapContainerInterface> = ({ name, selections, saveR
       setShowColorPicker(false);
     }
 
-    /**
-     * Update a region title.
-     */
-    function hoverAction(e: MouseEvent): void {
-      const target = e.target as HTMLDivElement;
-
-      if (target.tagName === 'path' && target.getAttribute('title')) {
-        const title: string | null = target.getAttribute('title');
-        setHoverTitle(title);
-      } else {
-        setHoverTitle('');
-        if (titleElement) {
-          titleElement.style.top = `-50px`;
-        }
-      }
-    }
-
     document.addEventListener('click', clickAction);
-    document.addEventListener('mouseover', hoverAction);
 
     return () => {
       document.removeEventListener('click', clickAction);
-      document.removeEventListener('mouseover', hoverAction);
     };
   }, []);
-
-  /**
-   * Move the region title with a mouse.
-   */
-  const mouseMoveAction = (e: React.MouseEvent<HTMLDivElement>) => {
-    const target = e.target as HTMLDivElement;
-    if (hoverTitle && target.tagName === 'path' && target.getAttribute('title')) {
-      if (titleElement) {
-        titleElement.style.top = `${e.pageY + 40}px`;
-        titleElement.style.left = `${e.pageX - titleElement.scrollWidth / 2}px`;
-      }
-    }
-  };
 
   /**
    * Color picker callback function.
@@ -142,10 +88,7 @@ const MapContainer: React.FC<MapContainerInterface> = ({ name, selections, saveR
   };
 
   return (
-    <div className='map-container' onMouseMove={mouseMoveAction}>
-      <div className='title' style={{ display: hoverTitle ? 'flex' : 'none' }}>
-        {hoverTitle}
-      </div>
+    <div className='map-container'>
       <ColorPicker hoverTitle={activeRegion?.title} selectColor={selectColorAction} show={showColorPicker} />
       <Map name={name} selections={selections} />
     </div>

@@ -26,3 +26,14 @@
     }
   }
 }
+
+.screenshot {
+  .tab:not(.active),
+  .map-tools-buttons,
+  .tools-block {
+    display: none !important;
+  }
+  .left {
+    width: 100%;
+  }
+}

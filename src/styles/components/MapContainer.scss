@@ -12,45 +12,46 @@
   position: relative;
   border-radius: $defaultBorderRadius;
 
-  .title {
-    position: absolute;
-    background-color: $white;
-    padding: 8px;
-    border-radius: 6px;
-    top: -100px;
-    left: -100px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: $darkBoxShadow;
-    cursor: default;
-    user-select: none;
-    z-index: 5;
+  &:hover,
+  *:hover {
+    .title:not(:empty) {
+      display: flex !important;
+    }
   }
 
-  .zoom-buttons {
+  .map-tools-buttons {
     z-index: 100;
     position: relative;
     display: flex;
     gap: 8px;
-    flex-direction: column;
-    position: absolute;
+    flex-direction: row;
+    // position: absolute;
     top: 8px;
     left: 8px;
-    button {
-      appearance: none;
-      border: 0px;
+    user-select: none;
+    align-self: flex-start;
+    .map-tool {
       background-color: $white;
-      font-size: 18px;
-      color: $black;
       padding: 8px;
-      width: 36px;
-      height: 36px;
+      color: $black;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 100px;
       box-shadow: $defaultBoxShadow;
+    }
+    button {
+      appearance: none;
+      border: 0px;
+      font-size: 18px;
+      width: 36px;
+      height: 36px;
+      border-radius: 100px;
+    }
+    .title {
+      border-radius: 6px;
+      top: -100px;
+      left: -100px;
+      display: none;
     }
   }
 

@@ -12,28 +12,13 @@ interface SidebarInterface {
   selections: { [key: string]: string };
 }
 
-const hideClasses = '.tab:not(.active), .zoom-buttons, .tools-block';
-
 const Sidebar: React.FC<SidebarInterface> = ({ map, addMapAction, clearMapAction, removeMapAction, selections }) => {
   const shareAction = async () => {
-    // Hide some elements for a screenshot.
-    const elementsToHide: NodeListOf<HTMLElement> = document.querySelectorAll(hideClasses);
-    const elementsArray: HTMLElement[] = Array.from(elementsToHide);
+    document.body.classList.add('screenshot'); // Hide some elements for a screenshot.
 
-    elementsArray.forEach((element) => {
-      element.dataset.display = getComputedStyle(element).display;
-      element.style.display = 'none';
-    });
+    const screenshot = await html2canvas(document.body); // Create a screenshot.
 
-    // Create a screenshot.
-    const screenshot = await html2canvas(document.body);
-
-    // Revert items back to their original state.
-    elementsArray.forEach((element) => {
-      if (element.dataset.display) {
-        element.style.display = element.dataset.display;
-      }
-    });
+    document.body.classList.remove('screenshot'); // Revert items back to their original state.
 
     // Download the screenshot
     const screenshotDataURL = screenshot.toDataURL('image/png');

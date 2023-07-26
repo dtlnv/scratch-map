@@ -52,6 +52,7 @@ const useZoom = () => {
 };
 
 const Map: React.FC<MapInterface> = ({ name, selections }) => {
+  const [hoverTitle, setHoverTitle] = useState<string | null>(null);
   const [SvgComponent, setSvgComponent] = useState<React.FunctionComponent<React.SVGAttributes<SVGElement>> | null>(null);
   const [viewBox, setViewBox] = useState<string>('0 0 0 0');
   const { handleZoomIn, handleZoomOut, handleMouseDown, handleMouseMove, handleMouseUp, scale, reset, translateX, translateY } = useZoom();
@@ -62,6 +63,27 @@ const Map: React.FC<MapInterface> = ({ name, selections }) => {
     });
     reset();
   }, [name]);
+
+  useEffect(() => {
+    /**
+     * Update a region title.
+     */
+    function hoverAction(e: MouseEvent): void {
+      const target = e.target as HTMLDivElement;
+      if (target.tagName === 'path' && target.getAttribute('title')) {
+        const title: string | null = target.getAttribute('title');
+        setHoverTitle(title);
+      } else if (target.tagName === 'svg') {
+        setHoverTitle('');
+      }
+    }
+
+    document.addEventListener('mouseover', hoverAction);
+
+    return () => {
+      document.removeEventListener('mouseover', hoverAction);
+    };
+  }, []);
 
   useEffect(() => {
     if (selections && Object.keys(selections).length > 0) {
@@ -96,10 +118,17 @@ const Map: React.FC<MapInterface> = ({ name, selections }) => {
   return (
     SvgComponent && (
       <>
-        <div className='zoom-buttons'>
-          <button onClick={handleZoomIn}>+</button>
-          <button onClick={() => reset()}>•</button>
-          <button onClick={handleZoomOut}>-</button>
+        <div className='map-tools-buttons'>
+          <button className='map-tool' onClick={handleZoomOut}>
+            -
+          </button>
+          <button className='map-tool' onClick={() => reset()}>
+            •
+          </button>
+          <button className='map-tool' onClick={handleZoomIn}>
+            +
+          </button>
+          <div className='map-tool title'>{hoverTitle}</div>
         </div>
         <SvgComponent
           viewBox={viewBox}
