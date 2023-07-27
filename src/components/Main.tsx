@@ -4,8 +4,7 @@ import Tabs from './Tabs';
 import Maps from '../maps.json';
 import Map from './Map';
 
-const STORAGE_SELECTIONS_KEY = '_scratch_selections_key_';
-const STORAGE_USER_MAPS_KEY = '_scratch_map_key_';
+const USER_STORAGE = '_scratch_map_user_storage_key_';
 
 interface StorageInterface {
   [key: string]: {
@@ -16,12 +15,24 @@ interface StorageInterface {
 const Main: React.FC = () => {
   const [currentMap, setCurrentMap] = useState<string>('world');
   const [storage, setStorage] = useState<StorageInterface>({});
-  const [selections, setSelections] = useState<{ [key: string]: string }>({});
   const [userList, setUserList] = useState<string[]>(['world']);
 
+  /**
+   * Get data from localStorage.
+   */
   useEffect(() => {
-    setSelections({ ...storage[currentMap] });
-  }, [currentMap, storage]);
+    try {
+      const appData: string | null = localStorage.getItem(USER_STORAGE);
+
+      if (appData) {
+        const data = JSON.parse(appData);
+        setStorage(data.storage);
+        setUserList(data.userList);
+      }
+    } catch (err) {
+      console.error('Cannot get data from the storage:', err);
+    }
+  }, []);
 
   /**
    * Update data of 'storage' state.
@@ -43,41 +54,21 @@ const Main: React.FC = () => {
     setStorage(tempStorage);
 
     try {
-      // Save data to localStorage.
-      localStorage.setItem(STORAGE_SELECTIONS_KEY, JSON.stringify(tempStorage));
+      // Save data to localStorage with the common key.
+      localStorage.setItem(USER_STORAGE, JSON.stringify({ storage: tempStorage, userList, currentMap }));
     } catch (err) {
-      console.error('Cannot save a data:', err);
+      console.error('Cannot save data:', err);
     }
   };
 
-  /**
-   * Get data from localStorage.
-   */
-  useEffect(() => {
-    try {
-      const selectionStorage: string | null = localStorage.getItem(STORAGE_SELECTIONS_KEY);
-      const userMaps: string | null = localStorage.getItem(STORAGE_USER_MAPS_KEY);
-
-      if (selectionStorage) {
-        setStorage(JSON.parse(selectionStorage));
-      }
-
-      if (userMaps) {
-        setUserList(JSON.parse(userMaps));
-      }
-    } catch (err) {
-      console.error('Cannot get data from the storage:', err);
-    }
-  }, []);
-
   const clearMapAction = (): void => {
     try {
-      const dataFromStorage: string | null = localStorage.getItem(STORAGE_SELECTIONS_KEY);
+      const dataFromStorage: string | null = localStorage.getItem(USER_STORAGE);
       if (dataFromStorage) {
-        const savedStorage: StorageInterface = JSON.parse(dataFromStorage);
-        delete savedStorage[currentMap];
-        setStorage(savedStorage);
-        localStorage.setItem(STORAGE_SELECTIONS_KEY, JSON.stringify(savedStorage));
+        const savedData = JSON.parse(dataFromStorage);
+        savedData.storage[currentMap] = {};
+        setStorage(savedData.storage);
+        localStorage.setItem(USER_STORAGE, JSON.stringify({ ...savedData, storage: savedData.storage }));
       }
     } catch (err) {
       console.error('Cannot clear a map:', err);
@@ -92,10 +83,9 @@ const Main: React.FC = () => {
       setCurrentMap(newMap);
 
       try {
-        // Save data to localStorage.
-        localStorage.setItem(STORAGE_USER_MAPS_KEY, JSON.stringify(tempUserList));
+        localStorage.setItem(USER_STORAGE, JSON.stringify({ storage, userList: tempUserList }));
       } catch (err) {
-        console.error('Cannot save a data:', err);
+        console.error('Cannot save data:', err);
       }
     }
   };
@@ -109,10 +99,9 @@ const Main: React.FC = () => {
       clearMapAction();
 
       try {
-        // Save data to localStorage.
-        localStorage.setItem(STORAGE_USER_MAPS_KEY, JSON.stringify(tempUserList));
+        localStorage.setItem(USER_STORAGE, JSON.stringify({ storage, userList: tempUserList }));
       } catch (err) {
-        console.error('Cannot save a data:', err);
+        console.error('Cannot save data:', err);
       }
     }
   };
@@ -129,7 +118,7 @@ const Main: React.FC = () => {
     <div className='layout'>
       <div className='left'>
         <Tabs activeMap={currentMap} mapsList={userList} setCurrentMap={setCurrentMap} />
-        <Map name={currentMap} selections={selections || {}} saveRegion={saveRegion} />
+        <Map name={currentMap} selections={storage[currentMap]} saveRegion={saveRegion} />
       </div>
       <div className='right'>
         <Sidebar
@@ -137,7 +126,7 @@ const Main: React.FC = () => {
           addMapAction={addMapAction}
           clearMapAction={confirmWrap(clearMapAction)}
           removeMapAction={confirmWrap(removeMapAction)}
-          selections={selections}
+          selections={storage[currentMap]}
         />
       </div>
     </div>
