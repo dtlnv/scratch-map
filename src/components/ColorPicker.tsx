@@ -1,16 +1,14 @@
 import React from 'react';
-import cx from 'classnames';
 import { ColorsNumber, Labels } from '../constants';
 
 interface ColorPickerInterface {
   hoverTitle: string | undefined;
-  show: boolean;
   selectColor: Function;
 }
 
-const ColorPicker: React.FC<ColorPickerInterface> = ({ hoverTitle, selectColor, show }) => {
+const ColorPicker: React.FC<ColorPickerInterface> = ({ hoverTitle, selectColor }) => {
   return (
-    <div className={cx('color-picker', { show })}>
+    <div className='color-picker'>
       {hoverTitle}
       <div className='colors'>
         {Array.from({ length: ColorsNumber }).map((_, i) => (

@@ -1,9 +1,7 @@
 @import '../../styles/constants.scss';
 
 .color-picker {
-  position: absolute;
-  // top: -100px;
-  // left: -100px;
+  position: fixed;
   user-select: none;
   background-color: $white;
   display: flex;
@@ -16,11 +14,6 @@
   border-radius: $defaultBorderRadius;
   z-index: 100;
   min-width: 240px;
-
-  visibility: hidden;
-  &.show {
-    visibility: visible;
-  }
   .colors {
     display: flex;
     gap: 16px;

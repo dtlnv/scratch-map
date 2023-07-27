@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import MapContainer from './MapContainer';
 import Sidebar from './Sidebar';
 import Tabs from './Tabs';
 import Maps from '../maps.json';
+import Map from './Map';
 
 const STORAGE_SELECTIONS_KEY = '_scratch_selections_key_';
 const STORAGE_USER_MAPS_KEY = '_scratch_map_key_';
@@ -129,7 +129,7 @@ const Main: React.FC = () => {
     <div className='layout'>
       <div className='left'>
         <Tabs activeMap={currentMap} mapsList={userList} setCurrentMap={setCurrentMap} />
-        <MapContainer name={currentMap} selections={selections || {}} saveRegion={saveRegion} />
+        <Map name={currentMap} selections={selections || {}} saveRegion={saveRegion} />
       </div>
       <div className='right'>
         <Sidebar

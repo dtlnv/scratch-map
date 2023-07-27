@@ -8,9 +8,6 @@
   gap: 24px;
   user-select: none;
   word-break: break-all;
-  @media (max-width: 768px) {
-    flex-direction: column-reverse;
-  }
   .block {
     background-color: $white;
     box-shadow: $defaultBoxShadow;

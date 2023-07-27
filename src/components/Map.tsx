@@ -1,145 +1,47 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { useActiveRegion, useHoverTitle, useSVGMap, useZoom } from './MapHooks';
+import ColorPicker from './ColorPicker';
 
 interface MapInterface {
   name: string;
   selections: { [key: string]: string | null } | null;
+  saveRegion: Function;
 }
 
-const useZoom = () => {
-  const [scale, setScale] = useState<number>(1);
-  const [translateX, setTranslateX] = useState<number>(0);
-  const [translateY, setTranslateY] = useState<number>(0);
-  const [startX, setStartX] = useState<number>(0);
-  const [startY, setStartY] = useState<number>(0);
-  const [dragging, setDragging] = useState<boolean>(false);
-  const step = 0.3;
-
-  const handleZoomIn = () => {
-    setScale(scale + step);
-  };
-
-  const handleZoomOut = () => {
-    setScale(scale - step);
-  };
-
-  const handleMouseDown = (e: React.MouseEvent<SVGSVGElement>) => {
-    setDragging(true);
-    setStartX(e.clientX - translateX);
-    setStartY(e.clientY - translateY);
-  };
-
-  const handleMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
-    if (dragging) {
-      setTranslateX(e.clientX - startX);
-      setTranslateY(e.clientY - startY);
-    }
-  };
-
-  const handleMouseUp = () => {
-    setDragging(false);
-  };
-
-  const reset = () => {
-    setScale(1);
-    setDragging(false);
-    setStartX(0);
-    setStartY(0);
-    setTranslateX(0);
-    setTranslateY(0);
-  };
-
-  return { handleZoomIn, handleZoomOut, handleMouseDown, handleMouseMove, handleMouseUp, scale, reset, translateX, translateY };
-};
-
-const Map: React.FC<MapInterface> = ({ name, selections }) => {
-  const [hoverTitle, setHoverTitle] = useState<string | null>(null);
-  const [SvgComponent, setSvgComponent] = useState<React.FunctionComponent<React.SVGAttributes<SVGElement>> | null>(null);
-  const [viewBox, setViewBox] = useState<string>('0 0 0 0');
+const Map: React.FC<MapInterface> = ({ name, selections, saveRegion }) => {
+  const [hoverTitle] = useHoverTitle();
   const { handleZoomIn, handleZoomOut, handleMouseDown, handleMouseMove, handleMouseUp, scale, reset, translateX, translateY } = useZoom();
-
-  useEffect(() => {
-    import(`../assets/svg-maps/${name}.svg`).then((module) => {
-      setSvgComponent(() => module.default);
-    });
-    reset();
-  }, [name]);
-
-  useEffect(() => {
-    /**
-     * Update a region title.
-     */
-    function hoverAction(e: MouseEvent): void {
-      const target = e.target as HTMLDivElement;
-      if (target.tagName === 'path' && target.getAttribute('title')) {
-        const title: string | null = target.getAttribute('title');
-        setHoverTitle(title);
-      } else if (target.tagName === 'svg') {
-        setHoverTitle('');
-      }
-    }
-
-    document.addEventListener('mouseover', hoverAction);
-
-    return () => {
-      document.removeEventListener('mouseover', hoverAction);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (selections && Object.keys(selections).length > 0) {
-      for (let region in selections) {
-        const regionArea: HTMLDivElement | null = document.querySelector(`#${region}`);
-        const color: string | null = selections[region];
-        if (regionArea && color) {
-          regionArea.setAttribute('class', color);
-        }
-      }
-    } else {
-      const allRegions: NodeListOf<Element> | null = document.querySelectorAll(`.map-container svg path[class]`);
-      allRegions.forEach((element) => {
-        element.removeAttribute('class');
-      });
-    }
-  }, [SvgComponent, selections]);
-
-  useEffect(() => {
-    const svgElement: HTMLDivElement | null = document.querySelector('.map-container svg');
-    if (svgElement) {
-      const width: string | null = svgElement?.getAttribute('width');
-      const height: string | null = svgElement?.getAttribute('height');
-      if (width && height) {
-        setViewBox(`0 0 ${width} ${height}`);
-        svgElement.removeAttribute('width');
-        svgElement.removeAttribute('height');
-      }
-    }
-  }, [SvgComponent]);
+  const { SvgComponent, viewBox } = useSVGMap({ name, selections, reset });
+  const { activeRegion, selectColorAction, showColorPicker } = useActiveRegion({ selections, saveRegion, name });
 
   return (
-    SvgComponent && (
-      <>
-        <div className='map-tools-buttons'>
-          <button className='map-tool' onClick={handleZoomOut}>
-            -
-          </button>
-          <button className='map-tool' onClick={() => reset()}>
-            •
-          </button>
-          <button className='map-tool' onClick={handleZoomIn}>
-            +
-          </button>
-          <div className='map-tool title'>{hoverTitle}</div>
-        </div>
-        <SvgComponent
-          viewBox={viewBox}
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          style={{ transform: `scale(${scale}) translate(${translateX}px, ${translateY}px)` }}
-          preserveAspectRatio='xMidYMid meet'
-        />
-      </>
-    )
+    <div className='map-container'>
+      {showColorPicker && <ColorPicker hoverTitle={activeRegion?.title} selectColor={selectColorAction} />}
+      {SvgComponent && (
+        <>
+          <div className='map-tools-buttons'>
+            <button className='map-tool' onClick={handleZoomOut}>
+              -
+            </button>
+            <button className='map-tool' onClick={() => reset()}>
+              •
+            </button>
+            <button className='map-tool' onClick={handleZoomIn}>
+              +
+            </button>
+            <div className='map-tool title'>{hoverTitle}</div>
+          </div>
+          <SvgComponent
+            viewBox={viewBox}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            style={{ transform: `scale(${scale}) translate(${translateX}px, ${translateY}px)` }}
+            preserveAspectRatio='xMidYMid meet'
+          />
+        </>
+      )}
+    </div>
   );
 };
 

@@ -11,7 +11,14 @@
   flex-direction: column;
   position: relative;
   border-radius: $defaultBorderRadius;
-
+  @media (max-width: 768px) {
+    overflow: auto;
+    .map-tools-buttons {
+      top: 0px !important;
+      left: 0px !important;
+      position: sticky !important;
+    }
+  }
   &:hover,
   *:hover {
     .title:not(:empty) {
@@ -25,7 +32,6 @@
     display: flex;
     gap: 8px;
     flex-direction: row;
-    // position: absolute;
     top: 8px;
     left: 8px;
     user-select: none;
@@ -38,6 +44,7 @@
       align-items: center;
       justify-content: center;
       box-shadow: $defaultBoxShadow;
+      border-radius: 100px;
     }
     button {
       appearance: none;
@@ -45,13 +52,10 @@
       font-size: 18px;
       width: 36px;
       height: 36px;
-      border-radius: 100px;
     }
     .title {
-      border-radius: 6px;
-      top: -100px;
-      left: -100px;
       display: none;
+      padding: 8px 12px;
     }
   }
 

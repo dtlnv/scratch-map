@@ -7,8 +7,6 @@ interface TabsInterface {
 }
 
 const Select: React.FC<TabsInterface> = ({ defaultValue, options, onChange }) => {
-  console.log('options', options);
-
   return (
     <label className='custom-select'>
       <select onChange={onChange} defaultValue={defaultValue}>
