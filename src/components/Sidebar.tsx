@@ -55,7 +55,7 @@ const Sidebar: React.FC<SidebarInterface> = ({ map, addMapAction, clearMapAction
       <div className='block'>
         <ColorsBlock selections={selections} />
       </div>
-      <div className='copyright'>{window.location.host}</div>
+      <div className='copyright'>{window?.location.host}</div>
     </div>
   );
 };

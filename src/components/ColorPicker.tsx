@@ -12,7 +12,7 @@ const ColorPicker: React.FC<ColorPickerInterface> = ({ hoverTitle, selectColor }
       {hoverTitle}
       <div className='colors'>
         {Array.from({ length: ColorsNumber }).map((_, i) => (
-          <div
+          <button
             key={i}
             title={Labels[`color-${i + 1}`]}
             className={`color-dot color-${i + 1}`}

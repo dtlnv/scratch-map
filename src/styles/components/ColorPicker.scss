@@ -25,6 +25,8 @@
     border-radius: 100px;
     cursor: pointer;
     transition: scale 0.1s;
+    appearance: none;
+    border: 0px;
     &:hover {
       scale: 1.1;
     }

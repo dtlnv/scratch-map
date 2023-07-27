@@ -209,5 +209,6 @@ export const useActiveRegion = ({ selections, saveRegion, name }: useActiveRegio
             active.removeAttribute('class');
         }
     };
+
     return { activeRegion, selectColorAction, showColorPicker };
 };
