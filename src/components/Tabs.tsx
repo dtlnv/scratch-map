@@ -41,7 +41,7 @@ const Tabs: React.FC<TabsInterface> = ({ activeMap, mapsList, setCurrentMap }) =
   return (
     <div className='tabs'>
       {select && activeMap ? (
-        <Select defaultValue={activeMap} options={tabsList} onChange={(e) => setCurrentMap(e.target.value)} />
+        <Select value={activeMap} options={tabsList} onChange={(e) => setCurrentMap(e.target.value)} />
       ) : (
         tabsList.map((item) => (
           <div key={item.key} className={cx('tab', { active: item.key === activeMap })} onClick={() => setCurrentMap(item.key)}>

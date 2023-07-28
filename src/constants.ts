@@ -5,5 +5,5 @@ export const Labels: { [key: string]: string } = {
     'color-2': 'Transit',
     'color-3': 'Want to visit',
     'color-4': 'Favorite',
-    'color-5': 'Never again',
+    'color-5': 'Don\'t want',
 };
