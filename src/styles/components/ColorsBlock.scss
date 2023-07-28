@@ -15,7 +15,7 @@
       height: 24px;
       background-color: $lightGrey;
       border-radius: 100px;
-
+      flex: none;
       @each $color, $value in $colorMap {
         &.#{$color} {
           background-color: $value;

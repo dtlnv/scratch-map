@@ -17,16 +17,40 @@ export const useZoom = () => {
         setScale(scale - step);
     };
 
-    const handleMouseDown = (e: React.MouseEvent<SVGSVGElement>) => {
+    const handleMouseDown = (e: React.MouseEvent | React.TouchEvent) => {
         setDragging(true);
-        setStartX(e.clientX - translateX);
-        setStartY(e.clientY - translateY);
+        let clientX: number;
+        let clientY: number;
+        if ('clientX' in e) {
+            clientX = e.clientX;
+            clientY = e.clientY;
+        } else if (e.touches && e.touches.length > 0) {
+            clientX = e.touches[0].clientX;
+            clientY = e.touches[0].clientY;
+        } else {
+            return;
+        }
+
+        setStartX(clientX - translateX);
+        setStartY(clientY - translateY);
     };
 
-    const handleMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
+    const handleMouseMove = (e: React.MouseEvent | React.TouchEvent) => {
         if (dragging) {
-            setTranslateX(e.clientX - startX);
-            setTranslateY(e.clientY - startY);
+            let clientX: number;
+            let clientY: number;
+            if ('clientX' in e) {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            } else if (e.touches && e.touches.length > 0) {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            } else {
+                return;
+            }
+
+            setTranslateX(clientX - startX);
+            setTranslateY(clientY - startY);
         }
     };
 
@@ -92,6 +116,11 @@ export const useSVGMap = ({ name, selections, reset }: useSVGMapInterface) => {
     }, [name]);
 
     useEffect(() => {
+        const allRegions: NodeListOf<Element> | null = document.querySelectorAll(`.map-container svg path[class]`);
+        allRegions.forEach((element) => {
+            element.removeAttribute('class');
+        });
+
         if (selections && Object.keys(selections).length > 0) {
             for (let region in selections) {
                 const regionArea: HTMLDivElement | null = document.querySelector(`#${region}`);
@@ -100,11 +129,6 @@ export const useSVGMap = ({ name, selections, reset }: useSVGMapInterface) => {
                     regionArea.setAttribute('class', color);
                 }
             }
-        } else {
-            const allRegions: NodeListOf<Element> | null = document.querySelectorAll(`.map-container svg path[class]`);
-            allRegions.forEach((element) => {
-                element.removeAttribute('class');
-            });
         }
     }, [SvgComponent, selections]);
 
@@ -126,20 +150,18 @@ export const useSVGMap = ({ name, selections, reset }: useSVGMapInterface) => {
 
 
 interface useActiveRegionInterface {
-    selections: { [key: string]: string | null } | null;
-    saveRegion: Function;
+    saveRegions: Function;
     name: string;
 }
 
-export const useActiveRegion = ({ selections, saveRegion, name }: useActiveRegionInterface) => {
-    const [showColorPicker, setShowColorPicker] = useState<boolean>(true);
-    const [activeRegion, setActiveRegion] = useState<{ [key: string]: string } | null>(null);
+export const useActiveRegion = ({ saveRegions, name }: useActiveRegionInterface) => {
+    const [activeRegions, setActiveRegions] = useState<{ [key: string]: string }[]>([]);
 
     /**
      * Hide the color picker when new map is loaded.
      */
     useEffect(() => {
-        setShowColorPicker(false);
+        setActiveRegions([]);
     }, [name]);
 
     /**
@@ -148,19 +170,16 @@ export const useActiveRegion = ({ selections, saveRegion, name }: useActiveRegio
      * otherwise hide the color picker.
      */
     useEffect(() => {
-        const activesRegion: NodeListOf<SVGClipPathElement> = document.querySelectorAll('.map-container .active');
-        activesRegion.forEach((element: SVGClipPathElement) => {
+        const activesRegionPath: NodeListOf<SVGClipPathElement> = document.querySelectorAll('.map-container .active');
+        activesRegionPath.forEach((element: SVGClipPathElement) => {
             element.classList.remove('active');
         });
 
-        if (activeRegion) {
-            setShowColorPicker(true);
-            const newActive: HTMLDivElement | null = document.querySelector(`#${activeRegion.id}`);
+        for (let region of activeRegions) {
+            const newActive: HTMLDivElement | null = document.querySelector(`#${region.id}`);
             newActive?.classList.add('active');
-        } else {
-            setShowColorPicker(false);
         }
-    }, [activeRegion]);
+    }, [activeRegions]);
 
     useEffect(() => {
         /**
@@ -176,13 +195,21 @@ export const useActiveRegion = ({ selections, saveRegion, name }: useActiveRegio
             }
 
             // Make current element (region) active
-            if (target.tagName === 'path' && 'id' in target && !target.classList.contains('active')) {
-                setActiveRegion({ id: target.id, title: target.getAttribute('title') || '' });
+            if (target.tagName === 'path' && 'id' in target) {
+                if (!target.classList.contains('active')) {
+                    setActiveRegions(prev => {
+                        if (prev.find(region => region.id === target.id)) {
+                            return prev.filter(region => region.id !== target.id)
+                        } else {
+                            return [...prev, { id: target.id, title: target.getAttribute('title') || '' }]
+                        }
+                    });
+                } else {
+                    setActiveRegions(prev => prev.filter(region => region.id !== target.id))
+                }
                 return;
             }
-
-            setActiveRegion(null);
-            setShowColorPicker(false);
+            setActiveRegions([])
         }
 
         document.addEventListener('click', clickAction);
@@ -198,17 +225,19 @@ export const useActiveRegion = ({ selections, saveRegion, name }: useActiveRegio
      * @param color string | null
      */
     const selectColorAction = (color: string | null) => {
-        const active: HTMLDivElement | null = document.querySelector(`#${activeRegion?.id}`);
+        saveRegions(activeRegions.map(region => region.id), color);
 
-        if (activeRegion && (color || (!color && selections?.[activeRegion?.id]))) {
-            saveRegion(activeRegion.id, color);
-        }
-
-        setActiveRegion(null);
-        if (active && !color) {
-            active.removeAttribute('class');
-        }
+        const activesRegion: NodeListOf<SVGClipPathElement> = document.querySelectorAll('.map-container .active');
+        activesRegion.forEach((element: SVGClipPathElement) => {
+            element.classList.remove('active');
+        });
+        setActiveRegions([]);
     };
 
-    return { activeRegion, selectColorAction, showColorPicker };
+    const hideColorPicker = () => {
+        setActiveRegions([]);
+
+    }
+
+    return { activeRegions, selectColorAction, hideColorPicker };
 };

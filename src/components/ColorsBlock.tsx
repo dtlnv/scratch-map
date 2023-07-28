@@ -28,7 +28,12 @@ const ColorsBlock: React.FC<ColorsBlockInterface> = ({ selections }) => {
       {Object.keys(Labels).map((color) => (
         <div className='color-block' key={color}>
           <div className={cx('color-dot', color)} />
-          {Labels[color]} ({counters?.[color]})
+          <div>
+            <span contentEditable suppressContentEditableWarning>
+              {Labels[color]}
+            </span>{' '}
+            ({counters?.[color]})
+          </div>
         </div>
       ))}
     </div>

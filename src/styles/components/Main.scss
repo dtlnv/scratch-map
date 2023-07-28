@@ -3,6 +3,7 @@
 .layout {
   display: flex;
   width: 100vw;
+  min-height: 100vh;
   gap: 24px;
   padding: 24px;
   justify-content: center;
@@ -28,8 +29,8 @@
 }
 
 .screenshot {
-  .tab:not(.active),
-  .map-tools-buttons,
+  .tabs,
+  .map-tools,
   .tools-block {
     display: none !important;
   }

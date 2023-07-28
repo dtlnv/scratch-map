@@ -13,9 +13,9 @@ interface StorageInterface {
 }
 
 const Main: React.FC = () => {
-  const [currentMap, setCurrentMap] = useState<string>('world');
+  const [currentMap, setCurrentMap] = useState<string>('');
   const [storage, setStorage] = useState<StorageInterface>({});
-  const [userList, setUserList] = useState<string[]>(['world']);
+  const [userList, setUserList] = useState<string[]>(['']);
 
   /**
    * Get data from localStorage.
@@ -28,6 +28,9 @@ const Main: React.FC = () => {
         const data = JSON.parse(appData);
         setStorage(data.storage);
         setUserList(data.userList);
+        if (data.userList[0]) {
+          setCurrentMap(data.userList[0]);
+        }
       }
     } catch (err) {
       console.error('Cannot get data from the storage:', err);
@@ -36,19 +39,18 @@ const Main: React.FC = () => {
 
   /**
    * Update data of 'storage' state.
-   * @param region : string
+   * @param regions : string[]
    * @param color : string or null
    */
-  const saveRegion = (region: string, color: string | null) => {
+  const saveRegions = (regions: string[], color: string | null) => {
     const tempStorage: StorageInterface = { ...storage };
 
-    if (color === null && tempStorage[currentMap] && tempStorage[currentMap][region]) {
-      delete tempStorage[currentMap][region];
-    } else if (color) {
-      tempStorage[currentMap] = {
-        ...tempStorage[currentMap],
-        [region]: color,
-      };
+    for (let id of regions) {
+      if (color) {
+        tempStorage[currentMap][id] = color;
+      } else {
+        delete tempStorage[currentMap][id];
+      }
     }
 
     setStorage(tempStorage);
@@ -94,6 +96,10 @@ const Main: React.FC = () => {
     const isMap = Maps.find((region) => region.map === currentMap)?.name;
     if (isMap) {
       const tempUserList: string[] = userList.filter((map) => map !== currentMap);
+      if (tempUserList.length === 0) {
+        tempUserList.push('world');
+      }
+
       setUserList(tempUserList);
       setCurrentMap(tempUserList[0]);
       clearMapAction();
@@ -116,18 +122,26 @@ const Main: React.FC = () => {
 
   return (
     <div className='layout'>
-      <div className='left'>
-        <Tabs activeMap={currentMap} mapsList={userList} setCurrentMap={setCurrentMap} />
-        <Map name={currentMap} selections={storage[currentMap]} saveRegion={saveRegion} />
-      </div>
+      {currentMap ? (
+        <div className='left'>
+          <Tabs activeMap={currentMap} mapsList={userList} setCurrentMap={setCurrentMap} />
+          <Map name={currentMap} selections={{ ...storage[currentMap] }} saveRegions={saveRegions} />
+        </div>
+      ) : (
+        '...'
+      )}
       <div className='right'>
-        <Sidebar
-          map={currentMap}
-          addMapAction={addMapAction}
-          clearMapAction={confirmWrap(clearMapAction)}
-          removeMapAction={confirmWrap(removeMapAction)}
-          selections={storage[currentMap]}
-        />
+        {currentMap ? (
+          <Sidebar
+            map={currentMap}
+            addMapAction={addMapAction}
+            clearMapAction={confirmWrap(clearMapAction)}
+            removeMapAction={confirmWrap(removeMapAction)}
+            selections={{ ...storage[currentMap] }}
+          />
+        ) : (
+          '...'
+        )}
       </div>
     </div>
   );

@@ -9,7 +9,7 @@ interface TabsInterface {
 const Select: React.FC<TabsInterface> = ({ defaultValue, options, onChange }) => {
   return (
     <label className='custom-select'>
-      <select onChange={onChange} defaultValue={defaultValue}>
+      <select onChange={onChange} value={defaultValue}>
         {options.map((option) => (
           <option key={option.key} value={option.key}>
             {option.value}

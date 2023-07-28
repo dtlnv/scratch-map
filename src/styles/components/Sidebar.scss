@@ -19,9 +19,9 @@
     justify-content: center;
     align-items: center;
     gap: 2px;
-  }
-  .copyright {
-    color: $lightGrey;
-    font-size: 11px;
+    .map-info-block {
+      padding: 8px;
+      font-weight: bold;
+    }
   }
 }
