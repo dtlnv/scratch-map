@@ -14,17 +14,9 @@ interface SidebarInterface {
 
 const Sidebar: React.FC<SidebarInterface> = ({ map, addMapAction, clearMapAction, removeMapAction, selections }) => {
   const [mapInfo, setMapInfo] = useState<{ name: string; regionsCount: number }>();
-  const [showDownload, setShowDownload] = useState<boolean>(true);
 
   useEffect(() => {
-    (async () => {
-      try {
-        await html2canvas(document.body);
-        setShowDownload(true);
-      } catch (error) {
-        setShowDownload(false);
-      }
-    })();
+    setMapInfo(undefined);
   }, []);
 
   useEffect(() => {
@@ -34,7 +26,7 @@ const Sidebar: React.FC<SidebarInterface> = ({ map, addMapAction, clearMapAction
         const allRegions: NodeListOf<Element> | null = document.querySelectorAll(`.map-container svg path`);
         setMapInfo({ name, regionsCount: allRegions.length });
       }
-    }, 1000);
+    }, 900);
   }, [map, selections]);
 
   const shareAction = async () => {
@@ -84,11 +76,9 @@ const Sidebar: React.FC<SidebarInterface> = ({ map, addMapAction, clearMapAction
         <MenuItem icon='remove' onClick={removeMapAction}>
           Remove map
         </MenuItem>
-        {showDownload && (
-          <MenuItem icon='download' onClick={shareAction}>
-            Download map
-          </MenuItem>
-        )}
+        <MenuItem icon='download' onClick={shareAction}>
+          Download map
+        </MenuItem>
       </div>
     </div>
   );
