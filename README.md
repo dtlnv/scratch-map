@@ -52,7 +52,7 @@ The primary goal of the "Scratch Maps" project is to create an engaging and user
 
 ## 🚀 Try yourself
 
-<a href="https://main--classy-pegasus-8cb993.netlify.app/">
+<a href="https://main--classy-pegasus-8cb993.netlify.app/" target="_blank">
 Check online demo
 </a>
 
@@ -60,4 +60,4 @@ or
 1. Clone the repository and open the directory in terminal.
 2. Run `npm ci` or `npm i`.
 3. Run `npm develop`.
-4. Open <a href="http://localhost:8000/">http://localhost:8000/</a>
+4. Open <a href="http://localhost:8000/" target="_blank">http://localhost:8000/</a>
