@@ -17,16 +17,13 @@ const Sidebar: React.FC<SidebarInterface> = ({ map, addMapAction, clearMapAction
 
   useEffect(() => {
     setMapInfo(undefined);
-  }, []);
-
-  useEffect(() => {
     setTimeout(() => {
       const name = Maps.find((r) => r.map === map)?.name;
       if (name) {
         const allRegions: NodeListOf<Element> | null = document.querySelectorAll(`.map-container svg path`);
         setMapInfo({ name, regionsCount: allRegions.length });
       }
-    }, 900);
+    }, 800);
   }, [map, selections]);
 
   const shareAction = async () => {
