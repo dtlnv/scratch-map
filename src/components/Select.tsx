@@ -6,6 +6,10 @@ interface TabsInterface {
   onChange: (arg: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
+/**
+ * Custom select component. 
+ * Used in tabs in the mobile version.
+ */
 const Select: React.FC<TabsInterface> = ({ value, options, onChange }) => {
   return (
     <label className='custom-select'>

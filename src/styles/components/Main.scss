@@ -7,9 +7,11 @@
   gap: 24px;
   padding: 24px;
   justify-content: center;
+
   @media (max-width: 768px) {
     flex-direction: column;
   }
+
   .left {
     display: flex;
     flex-direction: column;
@@ -18,10 +20,12 @@
     width: 1020px;
     max-width: 100%;
   }
+
   .right {
     width: 232px;
     max-width: 100%;
     position: relative;
+
     @media (max-width: 768px) {
       margin: 0 auto;
     }
@@ -34,6 +38,7 @@
   .tools-block {
     display: none !important;
   }
+
   .left {
     width: 100%;
   }

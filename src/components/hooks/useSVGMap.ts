@@ -6,10 +6,16 @@ interface useSVGMapInterface {
     reset: Function;
 }
 
+/**
+ * Load and show the SVG map.
+ * Set colors for saved regions.
+ * @returns {object}
+ */
 const useSVGMap = ({ name, selections, reset }: useSVGMapInterface) => {
     const [SvgComponent, setSvgComponent] = useState<React.FunctionComponent<React.SVGAttributes<SVGElement>> | null>(null);
     const [viewBox, setViewBox] = useState<string>('0 0 0 0');
 
+    // Import the SVG map by name.
     useEffect(() => {
         import(`../../assets/svg-maps/${name}.svg`).then((module) => {
             setSvgComponent(() => module.default);
@@ -17,12 +23,15 @@ const useSVGMap = ({ name, selections, reset }: useSVGMapInterface) => {
         reset();
     }, [name]);
 
+    // Set colors for saved regions.
     useEffect(() => {
+        // First remove all active elements.
         const allRegions: NodeListOf<Element> | null = document.querySelectorAll(`.map-container svg path[class]`);
         allRegions.forEach((element) => {
             element.removeAttribute('class');
         });
 
+        // Then set the color class for the regions.
         if (selections && Object.keys(selections).length > 0) {
             for (let region in selections) {
                 const regionArea: HTMLDivElement | null = document.querySelector(`#${region}`);
@@ -34,6 +43,7 @@ const useSVGMap = ({ name, selections, reset }: useSVGMapInterface) => {
         }
     }, [SvgComponent, selections]);
 
+    // Adjust the SVG map position.
     useEffect(() => {
         const svgElement: HTMLDivElement | null = document.querySelector('.map-container svg');
         if (svgElement) {

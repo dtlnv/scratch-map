@@ -10,11 +10,13 @@
   border-radius: 7px;
   font-size: 16px;
   position: relative;
+
   @media (hover: hover) {
     &:hover {
       background-color: $lightGrey2;
     }
   }
+
   &.select {
     select {
       background: none;

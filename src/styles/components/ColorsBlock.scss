@@ -6,16 +6,19 @@
   gap: 16px;
   align-self: stretch;
   flex-direction: column;
+
   .color-block {
     display: flex;
     align-items: center;
     gap: 16px;
+
     .color-dot {
       width: 24px;
       height: 24px;
       background-color: $lightGrey;
       border-radius: 100px;
       flex: none;
+
       @each $color, $value in $colorMap {
         &.#{$color} {
           background-color: $value;

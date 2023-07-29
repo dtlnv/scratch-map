@@ -1,15 +1,12 @@
 import { useEffect, useState } from "react";
 import Maps from '../../maps.json';
 
-
 const USER_STORAGE = '_scratch_map_user_storage_key_';
 
-interface StorageInterface {
-    [key: string]: {
-        [key: string]: string;
-    };
-}
-
+/**
+ * Get user data from the localStorage and return it as an object.
+ * @returns {object} - Data from the localStorage.
+ */
 const getFromLocalStorage = () => {
     try {
         const appData: string | null = localStorage.getItem(USER_STORAGE);
@@ -22,6 +19,10 @@ const getFromLocalStorage = () => {
     return {};
 }
 
+/**
+ * Save user data into localStorage.
+ * @param {obj} - Data for the localStorage.
+ */
 const saveInLocalStorage = (obj: object) => {
     try {
         localStorage.setItem(USER_STORAGE, JSON.stringify(obj));
@@ -30,33 +31,54 @@ const saveInLocalStorage = (obj: object) => {
     }
 }
 
-const useInitMap = () => {
-    const [currentMap, setCurrentMap] = useState<string>('');
-    const [storage, setStorage] = useState<StorageInterface>({});
-    const [userList, setUserList] = useState<string[]>(['']);
+interface StorageInterface {
+    [key: string]: {
+        [key: string]: string;
+    };
+}
 
-    /**
-     * Get data from localStorage.
-     */
+/**
+ * Set current map.
+ * Get data from the storage.
+ * Save data into the storage.
+ * @returns {object}
+ */
+const useInitMap = () => {
+    const [currentMap, setCurrentMap] = useState<string>(''); // Name of the displayed map.
+    const [storage, setStorage] = useState<StorageInterface>({}); // Saved regions with colors.
+    const [mapsList, setMapsList] = useState<string[]>(['']); // Saved list of user cards.
+
+    // Get data from the localStorage.
     useEffect(() => {
         const data = getFromLocalStorage();
         setStorage(data.storage);
-        setUserList(data.userList);
-        if (data.userList[0]) {
-            setCurrentMap(data.userList[0]);
+
+        if (data.mapsList) {
+            setMapsList(data.mapsList);
+        } else {
+            setMapsList(['world'])
+        }
+
+        if (data.mapsList?.[0]) {
+            setCurrentMap(data.mapsList[0]);
+        } else {
+            setCurrentMap('world');
         }
     }, []);
 
     /**
-     * Update data of 'storage' state.
+     * Update data of 'storage' state and save it in localStorage
      * @param regions : string[]
-     * @param color : string or null
+     * @param color : string or null. null is for clearing.
      */
-    const saveRegions = (regions: string[], color: string | null) => {
+    const saveRegions = (regions: string[], color: string | null): void => {
         const tempStorage: StorageInterface = { ...storage };
 
         for (let id of regions) {
             if (color) {
+                if (!tempStorage[currentMap]) {
+                    tempStorage[currentMap] = {}
+                }
                 tempStorage[currentMap][id] = color;
             } else {
                 delete tempStorage[currentMap][id];
@@ -64,9 +86,10 @@ const useInitMap = () => {
         }
 
         setStorage(tempStorage);
-        saveInLocalStorage({ storage: tempStorage, userList, currentMap });
+        saveInLocalStorage({ storage: tempStorage, mapsList, currentMap });
     };
 
+    // Remove all colors for the current map.
     const clearMapAction = (): void => {
         const savedData = getFromLocalStorage();
         savedData.storage[currentMap] = {};
@@ -74,32 +97,35 @@ const useInitMap = () => {
         saveInLocalStorage({ ...savedData, storage: savedData.storage });
     };
 
+    // Add a new map.
     const addMapAction = (newMap: string): void => {
-        const isMap = Maps.find((region) => region.map === newMap)?.name;
+        const isMap: string | undefined = Maps.find((region) => region.map === newMap)?.name;
         if (isMap) {
-            const tempUserList: string[] = [...new Set([...userList, newMap])];
-            setUserList(tempUserList);
+            const tempMapsList: string[] = [...new Set([...mapsList, newMap])];
+            setMapsList(tempMapsList);
             setCurrentMap(newMap);
-            saveInLocalStorage({ storage, userList: tempUserList });
+            saveInLocalStorage({ storage, mapsList: tempMapsList });
         }
     };
 
+    // Remove the current map.
     const removeMapAction = (): void => {
-        const isMap = Maps.find((region) => region.map === currentMap)?.name;
+        const isMap: string | undefined = Maps.find((region) => region.map === currentMap)?.name;
         if (isMap) {
-            const tempUserList: string[] = userList.filter((map) => map !== currentMap);
-            if (tempUserList.length === 0) {
-                tempUserList.push('world');
+            const tempMapsList: string[] = mapsList.filter((map) => map !== currentMap);
+            if (tempMapsList.length === 0) {
+                tempMapsList.push('world');
             }
 
-            setUserList(tempUserList);
-            setCurrentMap(tempUserList[0]);
+            setMapsList(tempMapsList);
+            setCurrentMap(tempMapsList[0]);
             clearMapAction();
-            saveInLocalStorage({ storage, userList: tempUserList });
+            saveInLocalStorage({ storage, mapsList: tempMapsList });
         }
     };
 
-    const confirmWrap = (fn: Function) => {
+    // Wrap the function with window.confirm.
+    const confirmWrap = (fn: Function): Function => {
         return () => {
             if (window.confirm('Are you sure?')) {
                 fn();
@@ -109,9 +135,9 @@ const useInitMap = () => {
 
     return {
         currentMap,
-        userList,
+        mapsList,
         setCurrentMap,
-        selections: { ...storage[currentMap] },
+        selections: { ...storage?.[currentMap] },
         saveRegions,
         addMapAction,
         clearMapAction,

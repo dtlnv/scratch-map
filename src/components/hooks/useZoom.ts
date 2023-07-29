@@ -1,5 +1,19 @@
 import { useState } from "react";
 
+/**
+ * Hook to zoom and drag the map.
+ * @returns {object}
+ * {
+ *      handleZoom - Function for zoom.
+ *      handleMouseDown - Function for drag the map.
+ *      handleMouseMove - Function for drag the map.
+ *      handleMouseUp - Function for drag the map.
+ *      reset - Set the initial states.
+ *      scale - The current zoom level. 
+ *      translateX - The current position X.
+ *      translateY - The current position Y.
+ * }
+ */
 const useZoom = () => {
     const [scale, setScale] = useState<number>(1);
     const [translateX, setTranslateX] = useState<number>(0);
@@ -7,16 +21,14 @@ const useZoom = () => {
     const [startX, setStartX] = useState<number>(0);
     const [startY, setStartY] = useState<number>(0);
     const [dragging, setDragging] = useState<boolean>(false);
-    const step = 0.3;
+    const STEP = 0.3;
 
-    const handleZoomIn = () => {
-        setScale(scale + step);
+    // Zoom in or out.
+    const handleZoom = (direction: 'in' | 'out') => {
+        setScale(direction === 'in' ? scale + STEP : scale - STEP);
     };
 
-    const handleZoomOut = () => {
-        setScale(scale - step);
-    };
-
+    // Start dragging a map.
     const handleMouseDown = (e: React.MouseEvent | React.TouchEvent) => {
         setDragging(true);
         let clientX: number;
@@ -35,6 +47,7 @@ const useZoom = () => {
         setStartY(clientY - translateY);
     };
 
+    // Dragging a map.
     const handleMouseMove = (e: React.MouseEvent | React.TouchEvent) => {
         if (dragging) {
             let clientX: number;
@@ -54,10 +67,12 @@ const useZoom = () => {
         }
     };
 
+    // Stop dragging a map.
     const handleMouseUp = () => {
         setDragging(false);
     };
 
+    // Reset to initial state.
     const reset = () => {
         setScale(1);
         setDragging(false);
@@ -67,7 +82,7 @@ const useZoom = () => {
         setTranslateY(0);
     };
 
-    return { handleZoomIn, handleZoomOut, handleMouseDown, handleMouseMove, handleMouseUp, scale, reset, translateX, translateY };
+    return { handleZoom, handleMouseDown, handleMouseMove, handleMouseUp, scale, reset, translateX, translateY };
 };
 
 export default useZoom;

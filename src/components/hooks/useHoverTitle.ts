@@ -1,20 +1,24 @@
 import { useEffect, useState } from "react";
 
+/**
+ * Hook to display the name of the hovered region.
+ * @returns {array}
+ */
 const useHoverTitle = () => {
-    const [hoverTitle, setHoverTitle] = useState<string | null>(null);
+    const [hoverTitle, setHoverTitle] = useState<string>();
 
+    // Update a region title.
     useEffect(() => {
-        /**
-         * Update a region title.
-         */
         function hoverAction(e: MouseEvent): void {
             const target = e.target as HTMLDivElement;
             if (target.tagName === 'path' && target.getAttribute('title')) {
                 const title: string | null = target.getAttribute('title');
-                setHoverTitle(title);
-            } else if (target.tagName === 'svg') {
-                setHoverTitle('');
+                if (title) {
+                    setHoverTitle(title);
+                    return;
+                }
             }
+            setHoverTitle('');
         }
 
         document.addEventListener('mouseover', hoverAction);

@@ -9,10 +9,15 @@ interface TabsInterface {
   setCurrentMap: (arg: string) => void;
 }
 
+/**
+ * List of saved countries.
+ * Used to display countries (maps) added by the user.
+ */
 const Tabs: React.FC<TabsInterface> = ({ activeMap, mapsList, setCurrentMap }) => {
   const [tabsList, setTabsList] = useState<{ key: string; value: string }[]>([]);
   const [select, setSelect] = useState<boolean>(false);
 
+  // Save a list of tabs based on the user's list.
   useEffect(() => {
     const tabsList: { key: string; value: string }[] = [];
 
@@ -26,10 +31,12 @@ const Tabs: React.FC<TabsInterface> = ({ activeMap, mapsList, setCurrentMap }) =
     setTabsList(tabsList);
   }, [mapsList]);
 
+  // For the mobile version, show Select instead of tabs.
   useEffect(() => {
     function resizeAction() {
       setSelect(window.innerWidth < 768);
     }
+
     resizeAction();
     window.addEventListener('resize', resizeAction);
 

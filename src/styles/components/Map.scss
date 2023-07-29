@@ -10,6 +10,7 @@
   flex-direction: column;
   position: relative;
   border-radius: $defaultBorderRadius;
+
   &:hover,
   *:hover {
     .title:not(:empty) {
@@ -27,12 +28,14 @@
     left: 8px;
     user-select: none;
     align-self: flex-start;
+
     .map-tools_zoom {
       position: relative;
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
     }
+
     .map-tool {
       background-color: $white;
       padding: 8px;
@@ -43,6 +46,7 @@
       box-shadow: $defaultBoxShadow;
       border-radius: 100px;
     }
+
     button {
       appearance: none;
       border: 0px;
@@ -50,6 +54,7 @@
       width: 36px;
       height: 36px;
     }
+
     .title {
       display: none;
       padding: 8px 12px;
@@ -67,6 +72,7 @@
       stroke: white;
       stroke-opacity: 1;
       stroke-width: 0.5;
+
       @media (hover: hover) {
         &:hover {
           cursor: pointer;
@@ -74,6 +80,7 @@
           opacity: 0.85;
         }
       }
+
       &.active {
         fill: $regionActiveFill !important;
       }

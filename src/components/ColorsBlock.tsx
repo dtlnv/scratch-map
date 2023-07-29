@@ -6,9 +6,13 @@ interface ColorsBlockInterface {
   selections: { [key: string]: string } | null;
 }
 
+/**
+ * Show a block of colors and calculate the amount for each color.
+ */
 const ColorsBlock: React.FC<ColorsBlockInterface> = ({ selections }) => {
   const [counters, setCounters] = useState<{ [key: string]: number }>();
 
+  // Count the number of selected colors.
   useEffect(() => {
     const values: { [key: string]: number } = {};
 
@@ -20,6 +24,7 @@ const ColorsBlock: React.FC<ColorsBlockInterface> = ({ selections }) => {
       const color: string = selections[region];
       values[color] = values[color] + 1;
     }
+
     setCounters(values);
   }, [selections]);
 

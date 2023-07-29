@@ -12,20 +12,25 @@ interface SidebarInterface {
   selections: { [key: string]: string };
 }
 
+/**
+ * Sidebar in the right side of the application.
+ * Show ColorsBlock for the information about current map.
+ * Show menu items for user interaction (add, clear, delete, download maps).
+ */
 const Sidebar: React.FC<SidebarInterface> = ({ map, addMapAction, clearMapAction, removeMapAction, selections }) => {
+  // Download current map function.
   const shareAction = async () => {
     document.body.classList.add('screenshot'); // Hide some elements for a screenshot.
 
-    const screenshot = await html2canvas(document.body); // Create a screenshot.
+    const screenshot = await html2canvas(document.body); // Make a screenshot.
 
     document.body.classList.remove('screenshot'); // Revert items back to their original state.
 
-    // Download the screenshot
     const screenshotDataURL = screenshot.toDataURL('image/png');
     const a = document.createElement('a');
     a.href = screenshotDataURL;
     a.download = map + '.png';
-    a.click();
+    a.click(); // Download the screenshot.
     a.remove();
   };
 

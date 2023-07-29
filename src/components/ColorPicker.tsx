@@ -7,6 +7,9 @@ interface ColorPickerInterface {
   close: Function;
 }
 
+/**
+ * Choose a color for active regions.
+ */
 const ColorPicker: React.FC<ColorPickerInterface> = ({ label, selectColor, close }) => {
   return (
     <div className='color-picker'>

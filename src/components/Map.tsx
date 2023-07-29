@@ -8,9 +8,13 @@ interface MapInterface {
   saveRegions: Function;
 }
 
+/**
+ * Map section.
+ * Display the SVG map, zoom tools, hover label and color picker.
+ */
 const Map: React.FC<MapInterface> = ({ name, selections, saveRegions }) => {
   const [hoverTitle] = useHoverTitle();
-  const { handleZoomIn, handleZoomOut, handleMouseDown, handleMouseMove, handleMouseUp, scale, reset, translateX, translateY } = useZoom();
+  const { handleZoom, handleMouseDown, handleMouseMove, handleMouseUp, scale, reset, translateX, translateY } = useZoom();
   const { SvgComponent, viewBox } = useSVGMap({ name, selections, reset });
   const { activeRegions, selectColorAction, hideColorPicker } = useActiveRegions({ saveRegions, name });
 
@@ -20,13 +24,13 @@ const Map: React.FC<MapInterface> = ({ name, selections, saveRegions }) => {
     <div className='map-container'>
       <div className='map-tools'>
         <div className='map-tools_zoom'>
-          <button className='map-tool' onClick={handleZoomOut}>
+          <button className='map-tool' onClick={() => handleZoom('out')}>
             -
           </button>
           <button className='map-tool' onClick={() => reset()}>
             •
           </button>
-          <button className='map-tool' onClick={handleZoomIn}>
+          <button className='map-tool' onClick={() => handleZoom('in')}>
             +
           </button>
           <div className='map-tool title'>{hoverTitle}</div>

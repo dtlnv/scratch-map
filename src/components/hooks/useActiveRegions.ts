@@ -5,12 +5,14 @@ interface useActiveRegionInterface {
     name: string;
 }
 
+/**
+ * A hook for highlighting regions and adding color to them. 
+ * @returns {object}
+ */
 const useActiveRegions = ({ saveRegions, name }: useActiveRegionInterface) => {
-    const [activeRegions, setActiveRegions] = useState<{ [key: string]: string }[]>([]);
+    const [activeRegions, setActiveRegions] = useState<{ [key: string]: string }[]>([]); // Array of the selected regions.
 
-    /**
-     * Hide the color picker when new map is loaded.
-     */
+    // Hide the color picker when new map is loaded.
     useEffect(() => {
         setActiveRegions([]);
     }, [name]);
@@ -32,11 +34,11 @@ const useActiveRegions = ({ saveRegions, name }: useActiveRegionInterface) => {
         }
     }, [activeRegions]);
 
+    /**
+     * Clicking on the map will set a new active region.
+     * Clicking on somewhere else will remove the active region and hide the color picker.
+     */
     useEffect(() => {
-        /**
-         * Clicking on the map will set a new active region.
-         * Clicking on somewhere else will remove the active region and hide the color picker.
-         */
         function clickAction(e: MouseEvent): void {
             const target = e.target as HTMLElement;
 
@@ -45,7 +47,7 @@ const useActiveRegions = ({ saveRegions, name }: useActiveRegionInterface) => {
                 return;
             }
 
-            // Make current element (region) active
+            // Make clicked element (region) active
             if (target.tagName === 'path' && 'id' in target) {
                 if (!target.classList.contains('active')) {
                     setActiveRegions(prev => {
@@ -73,6 +75,7 @@ const useActiveRegions = ({ saveRegions, name }: useActiveRegionInterface) => {
     /**
      * Color picker callback function.
      * Save current data in the storage.
+     * Reset the list of active regions.
      * @param color string | null
      */
     const selectColorAction = (color: string | null) => {
@@ -85,9 +88,11 @@ const useActiveRegions = ({ saveRegions, name }: useActiveRegionInterface) => {
         setActiveRegions([]);
     };
 
+    /**
+     * Reset the active regions array so that the color picker is hidden.
+     */
     const hideColorPicker = () => {
         setActiveRegions([]);
-
     }
 
     return { activeRegions, selectColorAction, hideColorPicker };

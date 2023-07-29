@@ -5,15 +5,19 @@
   height: 24px;
   background-repeat: no-repeat;
   background-position: center;
+
   &.add {
     background-image: url('./components/icons/add.svg');
   }
+
   &.remove {
     background-image: url('./components/icons/remove.svg');
   }
+
   &.clear {
     background-image: url('./components/icons/clear.svg');
   }
+
   &.download {
     background-image: url('./components/icons/download.svg');
   }
