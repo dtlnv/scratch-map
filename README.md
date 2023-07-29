@@ -9,7 +9,7 @@
   </a>
 </p>
 
-## Project Description - Scratch Maps
+## Project Description
 
 The "Scratch Maps" is a small web application that allows users to interact with SVG maps representing different countries around the world. The main features of the application include:
 
