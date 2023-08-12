@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import cx from 'classnames';
-import { ColorsNumber, Labels } from '../constants';
+import { ColorsNumber, Labels } from '../utils/constants';
 
 interface ColorsBlockInterface {
   selections: { [key: string]: string } | null;

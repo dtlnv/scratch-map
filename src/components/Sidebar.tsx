@@ -1,14 +1,14 @@
 import React from 'react';
 import ColorsBlock from './ColorsBlock';
 import MenuItem from './MenuItem';
-import Maps from '../maps.json';
+import Maps from '../utils/maps.json';
 import html2canvas from 'html2canvas';
 
 interface SidebarInterface {
   map: string;
-  addMapAction: Function;
-  clearMapAction: Function;
-  removeMapAction: Function;
+  addMapAction: (newMap: string) => void;
+  clearMapAction: () => void;
+  removeMapAction: () => void;
   selections: { [key: string]: string };
 }
 

@@ -10,17 +10,8 @@ import { useInitMap } from './hooks';
  * The right side is for sidebar.
  */
 const Main: React.FC = () => {
-  const {
-    currentMap,
-    mapsList,
-    setCurrentMap,
-    selections,
-    saveRegions,
-    addMapAction,
-    clearMapAction,
-    removeMapAction,
-    confirmWrap,
-  } = useInitMap();
+  const { currentMap, mapsList, setCurrentMap, selections, saveRegions, addMapAction, clearMapAction, removeMapAction } =
+    useInitMap();
 
   if (!currentMap) return '...';
 
@@ -34,8 +25,8 @@ const Main: React.FC = () => {
         <Sidebar
           map={currentMap}
           addMapAction={addMapAction}
-          clearMapAction={confirmWrap(clearMapAction)}
-          removeMapAction={confirmWrap(removeMapAction)}
+          clearMapAction={clearMapAction}
+          removeMapAction={removeMapAction}
           selections={selections}
         />
       </div>

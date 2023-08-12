@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import cx from 'classnames';
 import Select from './Select';
-import Maps from '../maps.json';
+import Maps from '../utils/maps.json';
 
 interface TabsInterface {
   activeMap: string;
