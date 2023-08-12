@@ -9,6 +9,10 @@
   </a>
 </p>
 
+<p align="center">
+  <img src="preview.gif" alt="Scratch Map App" /> 
+</p>
+
 ## Project Description
 
 The "Scratch Maps" is a small web application that allows users to interact with SVG maps representing different countries around the world. The main features of the application include:
