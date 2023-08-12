@@ -1,16 +1,16 @@
 import React from 'react';
 
-interface TabsInterface {
+interface SelectInterface {
   value: string;
   options: { [key: string]: string }[];
   onChange: (arg: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
 /**
- * Custom select component. 
+ * Custom select component.
  * Used in tabs in the mobile version.
  */
-const Select: React.FC<TabsInterface> = ({ value, options, onChange }) => {
+const Select: React.FC<SelectInterface> = ({ value, options, onChange }) => {
   return (
     <label className='custom-select'>
       <select onChange={onChange} value={value}>

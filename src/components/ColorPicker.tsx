@@ -1,10 +1,10 @@
 import React from 'react';
-import { ColorsNumber, Labels } from '../constants';
+import { ColorsNumber, Labels } from '../utils/constants';
 
 interface ColorPickerInterface {
   label?: string;
-  selectColor: Function;
-  close: Function;
+  selectColor: (color: string | null) => void;
+  close: () => void;
 }
 
 /**

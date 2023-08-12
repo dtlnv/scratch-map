@@ -5,7 +5,7 @@ import { useActiveRegions, useHoverTitle, useSVGMap, useZoom } from './hooks';
 interface MapInterface {
   name: string;
   selections: { [key: string]: string | null } | null;
-  saveRegions: Function;
+  saveRegions: (regions: string[], color: string | null) => void;
 }
 
 /**
